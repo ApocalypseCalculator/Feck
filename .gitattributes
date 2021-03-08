@@ -1,0 +1,3 @@
+#These are marked as documentation not because they are docs, but because github is labelling my repository as HTML
+templates/* linguist-documentation
+pages/* linguist-documentation
