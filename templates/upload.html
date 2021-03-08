@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:site_name" content="Feck Files">
+    <meta name="og:description" content="Online Drive By ApocalypseCalculator">
+    <meta name="og:image" content="/site/files/icon.png">
+    <link rel="icon" type="image/png" size="256x256" href="/site/files/icon.ico">
+    <link rel="apple-touch-icon" type="image/png" href="/site/files/icon.ico">
+    <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        function sendData() {
+            let token = document.getElementById('csrftoken').value;
+            let fd = new FormData(document.getElementById('upload'));
+            $('#uploaddiv').html(`<div class="alert alert-warning"><strong>Uploading...</strong> please wait...</div><br><div id="progress-wrp"><div class="progress-bar"></div><div class="status">0%</div></div>`);
+            $.ajax({
+                url: '/upload',
+                type: "POST",
+                data: fd,
+                headers: {
+                    "csrftoken": `${token}`
+                },
+                processData: false,
+                contentType: false,
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', progress, false);
+                    }
+                    return myXhr;
+                },
+                success: function (data) {
+                    if (data.includes(' ')) {
+                        $('#uploaddiv').html(`<div class="alert alert-danger"><strong>Error</strong> ${data}</div>`);
+                    }
+                    else {
+                        window.location.href = data;
+                    }
+                },
+                error: function (error) {
+                    $('#uploaddiv').html(`<div class="alert alert-danger"><strong>Oops</strong> upload failed!</div>`);
+                    console.log(error);
+                }
+            })
+        }
+        function progress(event) {
+            var percent = 0;
+            var position = event.loaded || event.position;
+            var total = event.total;
+            var progress_bar_id = "#progress-wrp";
+            if (event.lengthComputable) {
+                percent = Math.ceil(position / total * 100);
+            }
+            $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
+            $(progress_bar_id + " .status").text(percent + "%");
+        };
+    </script>
+    <style>
+        #progress-wrp {
+            border: 1px solid #0099CC;
+            padding: 1px;
+            position: relative;
+            height: 30px;
+            border-radius: 3px;
+            margin: 10px;
+            text-align: left;
+            background: #fff;
+            box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        #progress-wrp .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #f39ac7;
+            width: 0;
+            box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+        }
+
+        #progress-wrp .status {
+            top: 3px;
+            left: 50%;
+            position: absolute;
+            display: inline-block;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/home">Home</a>
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/downloads">Downloads</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload">Upload A File</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Feck Files Upload</h1>
+            <p>Choose a file below and upload it.</p>
+        </div>
+    </div>
+    <div class="container" id="uploaddiv">
+        <form method="POST" enctype="multipart/form-data" id="upload">
+            <input class="form-control-file" type="file" name="fileToUpload" id="fileToUpload" required>
+            <br>
+            <input class="btn btn-info" type="button" onclick="sendData()" value="Upload File" name="submit">
+            <input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">
+        </form>
+    </div>
+</body>
