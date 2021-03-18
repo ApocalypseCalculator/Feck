@@ -46,13 +46,14 @@ sudo ufw allow 80
 sudo ufw allow 443
 sudo ufw enable
 ```
+You should set all other ports you don't need to deny for security.
 
 Then if you visit your IP address from the browser, you should see a default Nginx page showing up. If it doesn't, check your firewall and Nginx service status.
 If you are running the server from home, make sure you set up Port forwarding rules to forward port 80 and 443 to your computer's respective ports.
 
 If it works as expected, go ahead and delete the default configuration file
 ```
-sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
 ```
 and then create a new file called site
 ```
@@ -64,6 +65,8 @@ server {
    listen 80 default_server;
    server_name YOUR_DOMAIN_NAME;
    access_log /var/log/nginx/something-access.log;
+
+   client_max_body_size 100M;
    
    location / {
         proxy_pass http://127.0.0.1:8080;
@@ -91,7 +94,7 @@ Now run
 node .
 ```
 in the Feck directory, it should output "Listening on port 8080" or something similar. 
-If it does, enter the IP address in your browser, and you should be able to connect to the website.
+If it does, visit your domain in your browser, and you should be able to connect to the Feck site.
 
 ### Using a service to run your server
 
@@ -110,23 +113,38 @@ do
     sleep 1
 done
 ```
-Give it permissions using `chmod 777 start.sh`, and then run it using `./start.sh`
+This script automatically restarts the server when it encounters crashes.
+
+Give it permissions using `chmod 777 start.sh`, and then run it using `./start.sh`. 
 If it works, exit the process, and create a service file by doing
 ```
 sudo nano /etc/systemd/system/server.service
 ```
 and paste in the following, replacing yourfilepath with the current directory path
-```
+```sh
 [Unit]
 Description=Feck Files Server
+#Name of the service, you can change it if you want
+After=network.target
+#Wait for network access
 
 [Service]
 ExecStart=yourfilepath/start.sh
+#the file path of the script to execute
+TimeoutSec=300
+#Allowed timeout
+Restart=on-failure
+#restart service on failure
 
 [Install]
 WantedBy=multi-user.target
 ```
-save and start/check the service using 
+Save the file and enable the service by doing
+```
+sudo systemctl enabled server
+```
+This will enable the service to start automatically on reboot. 
+Start/check the service using 
 ```
 sudo systemctl start server
 sudo systemctl status server
@@ -161,7 +179,7 @@ To install HTTPS, follow instructions from [certbot](https://certbot.eff.org/ins
 I hope you liked this guide :3
 
 a few things to note: 
-- be careful about file space, this does not check your file space, and will cause potential errors
-- if you are uploading > 1MB files, increase allowed traffic in Nginx config by adding `client_max_body_size 500M;`(dependent on your file limit), remember to save and restart the service
-- If you encounter problems, open an issue in this repo
+- be careful about file space, this does not check your file space, and may cause errors once your disk space fills up
+- if you are uploading > 100MB files, increase allowed traffic in Nginx config by editing `client_max_body_size XM;` (replace X with the max size in MB), remember to save and restart the service. 
+- If you encounter problems, open an issue in this repository
 - Want to contribute? Open a pull request!
