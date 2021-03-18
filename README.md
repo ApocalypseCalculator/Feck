@@ -2,6 +2,8 @@
 
 A simple, robust online file drive system created in Node.js 
 
+This repository was forked from my original project with git completely reset to remove some sensitive personal information
+
 
 ## Installation
 
