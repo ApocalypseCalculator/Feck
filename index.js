@@ -9,6 +9,7 @@ const sqlite3 = require('sqlite3');
 const path = require('path');
 const config = require('./config');
 const notif = require('./notif');
+const package = require('./package.json');
 
 
 const app = express();
@@ -148,7 +149,7 @@ app.use('/upload', function (req, res) {
 })
 
 app.use('/home', function (req, res) {
-    res.send(fs.readFileSync('./templates/home.html').toString().replace('[name]', config.name).replace('<a href="mailto:"></a>', `<a href="mailto:${config.email}">${config.email}</a>`));
+    res.send(fs.readFileSync('./templates/home.html').toString().replace('[name]', config.name).replace('[version]', package.version).replace('<a href="mailto:"></a>', `<a href="mailto:${config.email}">${config.email}</a>`));
 })
 
 app.use('/', function (req, res) {
