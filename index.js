@@ -72,8 +72,9 @@ app.post('/upload', function (req, res) {
                                 file.pipe(fs.createWriteStream(saveTo));
                             });
                             busboy.on('finish', function () {
-                                notif.sendNotif(name, id, fs.statSync(`./uploads/${id}/${name}`).size, req.hostname, req.ip);
-                                res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
+                                notif.sendNotif(name, id, req.hostname, req.ip).then(() => {
+                                    res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
+                                }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
                             });
                             return req.pipe(busboy);
                         }
