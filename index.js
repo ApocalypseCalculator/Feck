@@ -8,6 +8,7 @@ const nanoid = require('nanoid');
 const sqlite3 = require('sqlite3');
 const path = require('path');
 const config = require('./config');
+const notif = require('./notif');
 
 
 const app = express();
@@ -70,6 +71,7 @@ app.post('/upload', function (req, res) {
                                 file.pipe(fs.createWriteStream(saveTo));
                             });
                             busboy.on('finish', function () {
+                                notif.sendNotif(name, id, fs.statSync(`./uploads/${id}/${name}`).size, req.hostname, req.ip);
                                 res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
                             });
                             return req.pipe(busboy);
