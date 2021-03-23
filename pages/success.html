@@ -18,8 +18,13 @@
             const urlParams = new URLSearchParams(window.location.search);
             const filename = urlParams.get('filename');
             const fileid = urlParams.get('fileid');
-            document.getElementById("successdiv").innerHTML = `<strong>Success!</strong> Uploaded your file <b>${filename}</b> successfully.`;
-            document.getElementById("clicklink").href = `/uploads/${fileid}/${filename}`;
+            if (fileid && filename) {
+                document.getElementById("successdiv").innerHTML = `<strong>Success!</strong> Uploaded your file <b>${filename}</b> successfully.`;
+                document.getElementById("clicklink").href = `/uploads/${fileid}/${filename}`;
+            }
+            else {
+                window.location.href = "/";
+            }
         }
     </script>
 </head>
