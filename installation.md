@@ -174,6 +174,13 @@ You can get a free certificate from [letsencrypt](https://letsencrypt.org/)
 
 To install HTTPS, follow instructions from [certbot](https://certbot.eff.org/instructions)
 
+### Additional Configuration Options
+
+If the SQLite installation fails. You can also use JSON as storage. Simply toggle the setting in config.js (database.sqlite) to false instead of true.
+
+If you wish to have a Discord webhook notification, you can also turn that on by toggling discord.on to true, and putting the webhook link inside the
+webhook's quotes. 
+
 ### The end
 
 I hope you liked this guide :3
