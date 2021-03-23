@@ -119,7 +119,7 @@ app.use('/uploads', function (req, res) {
         res.sendFile(path.join(__dirname + `/uploads${link}`));
     }
     else {
-        res.sendStatus(404).end();
+        res.status(404).sendFile(path.join(__dirname + `/pages/404.html`));
     }
 });
 
@@ -158,6 +158,10 @@ app.use('/', function (req, res) {
         res.sendFile(path.join(__dirname + `/pages${req.url.split('?')[0]}.html`));
     }
     else {
-        res.redirect('/home');
+        if (req.url === '/') {
+            res.redirect('/home');
+        } else {
+            res.status(404).sendFile(path.join(__dirname + `/pages/404.html`));
+        }
     }
 })
