@@ -4,5 +4,9 @@ module.exports = {
     ratelimit: {
         time: 3, //time window specified in minutes
         requests: 100 //how many requests allowed for the time specified per IP address
+    },
+    discord: {
+        on: false, //switch this to true to turn it on, false to turn it off
+        webhook: 'your webhook link'
     }
 }
