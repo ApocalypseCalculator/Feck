@@ -7,7 +7,6 @@ module.exports.sendNotif = (name, id, hostname, ip) => {
         setTimeout(function () {
             if (config.discord.on) {
                 let sizeBytes = fs.statSync(`./uploads/${id}/${name}`).size;
-                console.log(sizeBytes);
                 axios.post(`${config.discord.webhook}`, {
                     embeds: [{
                         title: "New Upload",
