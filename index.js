@@ -9,6 +9,9 @@ const path = require('path');
 const config = require('./config');
 const notif = require('./notif');
 const package = require('./package.json');
+const tools = require('./tools');
+
+tools.configChecks();
 
 var sqlite3;
 
