@@ -164,6 +164,7 @@ app.post('/api/downloads', function (req, res) {
         let raw = fs.readFileSync('./data/data.json');
         let parsed = JSON.parse(raw);
         let files = parsed.files;
+        files.reverse();
         let newraw = JSON.stringify(files);
         res.send(newraw).end();
     }
