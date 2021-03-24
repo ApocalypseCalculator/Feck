@@ -9,7 +9,7 @@ module.exports.sendNotif = (name, id, hostname, ip) => {
                 let sizeBytes = fs.statSync(`./uploads/${id}/${name}`).size;
                 axios.post(`${config.discord.webhook}`, {
                     username: "Feck Files Upload Notification",
-                    avatar_url: `https://${hostname}/site/files/icon.ico`,
+                    avatar_url: `https://${hostname}/site/files/icon.png`,
                     embeds: [{
                         title: "New Upload",
                         description: 'New File Uploaded to the Feck Files Drive',
