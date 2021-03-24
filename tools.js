@@ -26,6 +26,10 @@ module.exports.configChecks = () => {
         console.log("Config email must not be empty");
         process.exit(1);
     }
+    else if (config.discord.on && !/^https:\/\/discord.com\/api\/webhooks\/[0-9]{18}\/[0-9a-zA-Z-_]{55,75}$/.test(config.discord.webhook)) {
+        console.log("Notification webhook link does not match regex /^https:\\/\\/discord.com\\/api\\/webhooks\\/[0-9]{18}\\/[0-9a-zA-Z-_]{55,75}$/");
+        process.exit(1);
+    }
     else {
         console.log('All checks passed');
     }
