@@ -12,7 +12,7 @@ if (config.database.sqlite) {
         }
     });
     db.run(`DELETE FROM csrf WHERE generated < ?`, [Date.now() - 10800000], (err) => {
-        db.close((err) => { console.log('Done'); });
+        db.close((err) => { console.log('Done'); return; });
         if (err) {
             console.log(err);
         }
@@ -32,4 +32,5 @@ else {
     let newraw = JSON.stringify(parsed);
     fs.writeFileSync('./data/data.json', newraw);
     console.log('Done');
+    return;
 }
