@@ -11,8 +11,6 @@ const notif = require('./notif');
 const package = require('./package.json');
 const tools = require('./tools');
 
-tools.configChecks();
-
 var sqlite3;
 
 if (config.database.sqlite) {
@@ -33,9 +31,13 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.enable('trust proxy');
 
 const PORT = 8080;
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-});
+tools.configChecks().then(() => {
+    setTimeout(function () { //shrug
+        app.listen(PORT, () => {
+            console.log(`Server listening on port ${PORT}`);
+        });
+    }, 100);
+})
 
 app.post('/upload', function (req, res) {
     try {
