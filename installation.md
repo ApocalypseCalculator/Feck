@@ -141,7 +141,7 @@ WantedBy=multi-user.target
 ```
 Save the file and enable the service by doing
 ```
-sudo systemctl enabled server
+sudo systemctl enable server
 ```
 This will enable the service to start automatically on reboot. 
 Start/check the service using 
