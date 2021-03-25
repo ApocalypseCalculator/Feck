@@ -30,11 +30,28 @@ After you finish that, start the server using
 node .
 ```
 
-If you are using it in production I highly suggest using a script to monitor crashes and automatically restart,
-then add it as a system service. 
+If you are using it in production I highly suggest using a script to monitor crashes and automatically restart and/or add it as a system service. 
 
 **Installing on a Linux server? Follow [this guide](https://github.com/ApocalypseCalculator/Feck/blob/master/installation.md)**
 
+If you have trouble setting it up, you can DM me on Discord for help at ApocalypseCalculator#7096
+
+## Configuration
+
+`name` your own name
+
+`email` your email so that site users can contact you
+
+`ratelimit`
+- `time` ratelimit cooldown in minutes
+- `requests` amount of requests allowed within `time`
+
+`discord`
+- `on` whether to turn on Discord notifications or not (true for on false for off)
+- `webhook` the Discord webhook link (only required if on is set to true)
+
+`database`
+- `sqlite` whether to use SQLite or JSON as database (true for SQLite, false for JSON)
 
 ## Folders and Subfolders
 
@@ -46,8 +63,19 @@ Templates are pages that require some meddling before being sent to the user, su
 
 Data is the folder storing data such as site database, website icons, etc. 
 
-# Licensing and others
+## Extras
 
-According the Apache 2.0 license included, this code is open source. The only condition is that you may not remove my credits from the code.
+Feck Files currently comes with 2 standalone scripts: 
+
+- `csrfclean.js` 
+
+This is a script that cleans up unused CSRF tokens in the database. It is recommended to manage this task through a cronjob or run it manually every once in a while. 
+- `sync.js`
+
+If you ever feel the need to switch to SQLite or to JSON database, you can sync the data between both by running the script with an argument to specify which database to copy from. 
+
+## Licensing and others
+
+According the Apache 2.0 license included, this code is open source. The only condition is that you may not remove my credits. 
 
 As for the site icon, I got it off a google search. I did not make that icon, and I am currently unable to find who made it.
