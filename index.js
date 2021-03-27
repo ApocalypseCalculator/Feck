@@ -74,7 +74,7 @@ app.post('/upload', function (req, res) {
                                 busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
                                     var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
                                     name = `${filename}`;
-                                    db.run(`INSERT INTO files(name,id,date) VALUES(?,?,?)`, [filename, id, Date.now()], function (err) {
+                                    db.run(`INSERT INTO files(name,id,date, size) VALUES(?,?,?,?)`, [filename, id, Date.now(), size], function (err) {
                                         db.close((err) => { });
                                         if (err) {
                                             console.log(err);
@@ -116,7 +116,8 @@ app.post('/upload', function (req, res) {
                         let newobj = {
                             name: filename,
                             id: id,
-                            date: Date.now()
+                            date: Date.now(),
+                            size: size
                         }
                         parsed.files.push(newobj);
                         parsed.csrf.splice(indx, 1);
