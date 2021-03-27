@@ -70,6 +70,7 @@ app.post('/upload', function (req, res) {
                                 fs.mkdirSync(`./uploads/${id}`);
                                 var busboy = new Busboy({ headers: req.headers });
                                 let name = "";
+                                let size = formatSize(req.headers["content-length"]);
                                 busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
                                     var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
                                     name = `${filename}`;
@@ -83,7 +84,7 @@ app.post('/upload', function (req, res) {
                                     file.pipe(fs.createWriteStream(saveTo));
                                 });
                                 busboy.on('finish', function () {
-                                    notif.sendNotif(name, id, req.hostname, req.ip).then(() => {
+                                    notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
                                         res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
                                     }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
                                 });
@@ -108,6 +109,7 @@ app.post('/upload', function (req, res) {
                     fs.mkdirSync(`./uploads/${id}`);
                     var busboy = new Busboy({ headers: req.headers });
                     let name = "";
+                    let size = formatSize(req.headers["content-length"]);
                     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
                         var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
                         name = `${filename}`;
@@ -123,7 +125,7 @@ app.post('/upload', function (req, res) {
                         file.pipe(fs.createWriteStream(saveTo));
                     });
                     busboy.on('finish', function () {
-                        notif.sendNotif(name, id, req.hostname, req.ip).then(() => {
+                        notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
                             res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
                         }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
                     });
@@ -247,4 +249,18 @@ function getIndex(arr, prop, val) {
         }
     }
     return -1;
+}
+
+function formatSize(number) {
+    if (number >= 1024 * 1024) {
+        let mbSize = parseInt(number / (1024 * 1024));
+        return `${mbSize}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
+    }
+    else if (number >= 1024) {
+        let kbSize = parseInt(number / (1024));
+        return `${kbSize}KB`;
+    }
+    else {
+        return `${number}B`;
+    }
 }
