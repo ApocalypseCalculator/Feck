@@ -58,7 +58,7 @@
                     document.getElementById("status").remove();
                     parsed.forEach(p => {
                         let tr = document.createElement("tr");
-                        tr.innerHTML = `<td>${p.name}</td><td>${new Date(p.date).toLocaleString()}</td><td><button class="btn btn-info btn-sm"><a href="/uploads/${p.id}/${encodeURIComponent(p.name)}" style="color: azure;" target="_blank"rel="noopener noreferrer">Download</a></button></td>`;
+                        tr.innerHTML = `<td>${p.name}</td><td>${p.size}</td><td>${new Date(p.date).toLocaleString()}</td><td><button class="btn btn-info btn-sm"><a href="/uploads/${p.id}/${encodeURIComponent(p.name)}" style="color: azure;" target="_blank"rel="noopener noreferrer">Download</a></button></td>`;
                         document.getElementById("myTable").appendChild(tr);
                     })
                 }
@@ -116,6 +116,7 @@
         <table id="myTable">
             <tr class="header">
                 <th>Name</th>
+                <th>Size</th>
                 <th>Upload Time</th>
                 <th>Download Links</th>
             </tr>
