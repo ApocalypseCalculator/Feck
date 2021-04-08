@@ -67,21 +67,26 @@ app.post('/upload', function (req, res) {
                             }
                             else {
                                 let id = nanoid.nanoid();
-                                fs.mkdirSync(`./uploads/${id}`);
                                 var busboy = new Busboy({ headers: req.headers });
                                 let name = "";
                                 let size = formatSize(req.headers["content-length"]);
                                 busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-                                    var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
-                                    name = `${filename}`;
-                                    db.run(`INSERT INTO files(name,id,date, size) VALUES(?,?,?,?)`, [filename, id, Date.now(), size], function (err) {
-                                        db.close((err) => { });
-                                        if (err) {
-                                            console.log(err);
-                                            res.sendStatus(500).end();
-                                        }
-                                    })
-                                    file.pipe(fs.createWriteStream(saveTo));
+                                    if (filename) {
+                                        fs.mkdirSync(`./uploads/${id}`);
+                                        var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
+                                        name = `${filename}`;
+                                        db.run(`INSERT INTO files(name,id,date, size) VALUES(?,?,?,?)`, [filename, id, Date.now(), size], function (err) {
+                                            db.close((err) => { });
+                                            if (err) {
+                                                console.log(err);
+                                                res.sendStatus(500).end();
+                                            }
+                                        })
+                                        file.pipe(fs.createWriteStream(saveTo));
+                                    }
+                                    else {
+                                        res.status(400).send('No file attached?');
+                                    }
                                 });
                                 busboy.on('finish', function () {
                                     notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
