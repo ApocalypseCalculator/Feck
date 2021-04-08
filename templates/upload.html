@@ -115,10 +115,10 @@
         </div>
     </div>
     <div class="container" id="uploaddiv">
-        <form method="POST" enctype="multipart/form-data" id="upload">
+        <form method="POST" enctype="multipart/form-data" id="upload" onsubmit="sendData();return false;">
             <input class="form-control-file" type="file" name="fileToUpload" id="fileToUpload" required>
             <br>
-            <input class="btn btn-info" type="button" onclick="sendData()" value="Upload File" name="submit">
+            <input class="btn btn-info" type="submit" value="Upload File" name="submit">
             <input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">
         </form>
     </div>
