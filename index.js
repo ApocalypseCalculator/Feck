@@ -115,19 +115,24 @@ app.post('/upload', function (req, res) {
                     let name = "";
                     let size = formatSize(req.headers["content-length"]);
                     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-                        var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
-                        name = `${filename}`;
-                        let newobj = {
-                            name: filename,
-                            id: id,
-                            date: Date.now(),
-                            size: size
+                        if (filename) {
+                            var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
+                            name = `${filename}`;
+                            let newobj = {
+                                name: filename,
+                                id: id,
+                                date: Date.now(),
+                                size: size
+                            }
+                            parsed.files.push(newobj);
+                            parsed.csrf.splice(indx, 1);
+                            let newraw = JSON.stringify(parsed);
+                            fs.writeFileSync('./data/data.json', newraw);
+                            file.pipe(fs.createWriteStream(saveTo));
                         }
-                        parsed.files.push(newobj);
-                        parsed.csrf.splice(indx, 1);
-                        let newraw = JSON.stringify(parsed);
-                        fs.writeFileSync('./data/data.json', newraw);
-                        file.pipe(fs.createWriteStream(saveTo));
+                        else {
+                            res.status(400).send('No file attached?');
+                        }
                     });
                     busboy.on('finish', function () {
                         notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
