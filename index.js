@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyparser = require('body-parser');
 const cookieparser = require('cookie-parser');
 const rateLimit = require("express-rate-limit");
 const Busboy = require('busboy');
@@ -26,8 +25,8 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(cookieparser());
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ strict: true }));
 app.enable('trust proxy');
 
 const PORT = 8080;
