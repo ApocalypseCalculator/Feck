@@ -1,0 +1,1 @@
+SQLite Database schema is in schema.sql, simply run those command in a file called data.db in this directory. 
