@@ -29,12 +29,14 @@
   },
   "optionalDependencies": {
     "axios": "^0.21.1",
-    "sqlite3": "^5.0.0"
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
-    "pac-resolver": ">=5.0.0"
+    "pac-resolver": ">=5.0.0",
+    "tar": "^4.4.15"
   },
   "resolutions": {
-    "pac-resolver": ">=5.0.0"
+    "pac-resolver": ">=5.0.0",
+    "tar": "^4.4.15"
   }
 }
