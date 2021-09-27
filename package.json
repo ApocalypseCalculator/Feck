@@ -17,11 +17,14 @@
   },
   "homepage": "https://github.com/Gr8estVariable/Feck#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "connect-busboy": "0.0.2",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.3",
+    "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.20",
+    "node-mailjet": "^3.3.4",
     "uuid": "^8.3.2"
   },
   "optionalDependencies": {
