@@ -30,5 +30,11 @@
   "optionalDependencies": {
     "axios": "^0.21.1",
     "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "pac-resolver": ">=5.0.0"
+  },
+  "resolutions": {
+    "pac-resolver": ">=5.0.0"
   }
 }
