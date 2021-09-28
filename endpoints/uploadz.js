@@ -1,27 +1,22 @@
-const express = require("express");
-const cookieparser = require('cookie-parser');
-const rateLimit = require("express-rate-limit");
 const Busboy = require('busboy');
 const fs = require('fs');
 const nanoid = require('nanoid');
 const path = require('path');
 const config = require('../config');
 const notif = require('../notif');
-const package = require('../package.json');
-const tools = require('../tools');
 var sqlite3;
 
 if (config.database.sqlite) {
     sqlite3 = require('sqlite3');
 }
 
-module.exports.name = "upload";
+module.exports.name = "/upload";
 module.exports.execute = function (req, res) {
     if (req.method === "POST") {
         try {
             if (req.headers.csrftoken) {
                 if (config.database.sqlite) {
-                    let db = new sqlite3.Database('../data/data.db', sqlite3.OPEN_READWRITE, (err) => {
+                    let db = new sqlite3.Database('./data/data.db', sqlite3.OPEN_READWRITE, (err) => {
                         if (err) {
                             console.error(err.message);
                             res.send('Error occurred').end();
@@ -50,8 +45,8 @@ module.exports.execute = function (req, res) {
                                     let size = formatSize(req.headers["content-length"]);
                                     busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
                                         if (filename) {
-                                            fs.mkdirSync(`../uploads/${id}`);
-                                            var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
+                                            fs.mkdirSync(`./uploads/${id}`);
+                                            var saveTo = path.join(process.cwd(), `uploads/${id}/` + filename);
                                             name = `${filename}`;
                                             db.run(`INSERT INTO files(name,id,date, size) VALUES(?,?,?,?)`, [filename, id, Date.now(), size], function (err) {
                                                 db.close((err) => { });
@@ -78,7 +73,7 @@ module.exports.execute = function (req, res) {
                     })
                 }
                 else {
-                    let raw = fs.readFileSync('../data/data.json');
+                    let raw = fs.readFileSync('./data/data.json');
                     let parsed = JSON.parse(raw);
                     let indx = getIndex(parsed.csrf, "token", req.headers.csrftoken);
                     if (indx == -1) {
@@ -89,13 +84,13 @@ module.exports.execute = function (req, res) {
                     }
                     else {
                         let id = nanoid.nanoid();
-                        fs.mkdirSync(`../uploads/${id}`);
+                        fs.mkdirSync(`./uploads/${id}`);
                         var busboy = new Busboy({ headers: req.headers });
                         let name = "";
                         let size = formatSize(req.headers["content-length"]);
                         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
                             if (filename) {
-                                var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
+                                var saveTo = path.join(process.cwd(), `uploads/${id}/` + filename);
                                 name = `${filename}`;
                                 let newobj = {
                                     name: filename,
@@ -106,7 +101,7 @@ module.exports.execute = function (req, res) {
                                 parsed.files.push(newobj);
                                 parsed.csrf.splice(indx, 1);
                                 let newraw = JSON.stringify(parsed);
-                                fs.writeFileSync('../data/data.json', newraw);
+                                fs.writeFileSync('./data/data.json', newraw);
                                 file.pipe(fs.createWriteStream(saveTo));
                             }
                             else {
@@ -134,7 +129,7 @@ module.exports.execute = function (req, res) {
     }
     else if (req.method === "GET") {
         if (config.database.sqlite) {
-            let db = new sqlite3.Database('../data/data.db', sqlite3.OPEN_READWRITE, (err) => {
+            let db = new sqlite3.Database('./data/data.db', sqlite3.OPEN_READWRITE, (err) => {
                 if (err) {
                     console.error(err.message);
                     res.send('Error occurred').end();
@@ -148,13 +143,13 @@ module.exports.execute = function (req, res) {
                 }
                 else {
                     //yes I know this is very ugly but it will do for now
-                    res.send(fs.readFileSync('../templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
+                    res.send(fs.readFileSync('./templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
                 }
             })
         }
         else {
             let csrf = nanoid.nanoid(60);
-            let raw = fs.readFileSync('../data/data.json');
+            let raw = fs.readFileSync('./data/data.json');
             let parsed = JSON.parse(raw);
             let newobj = {
                 token: csrf,
@@ -162,8 +157,31 @@ module.exports.execute = function (req, res) {
             }
             parsed.csrf.push(newobj);
             let newraw = JSON.stringify(parsed);
-            fs.writeFileSync('../data/data.json', newraw);
-            res.send(fs.readFileSync('../templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
+            fs.writeFileSync('./data/data.json', newraw);
+            res.send(fs.readFileSync('./templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
         }
+    }
+}
+
+function getIndex(arr, prop, val) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i][prop] === val) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function formatSize(number) {
+    if (number >= 1024 * 1024) {
+        let mbSize = parseInt(number / (1024 * 1024));
+        return `${mbSize}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
+    }
+    else if (number >= 1024) {
+        let kbSize = parseInt(number / (1024));
+        return `${kbSize}KB`;
+    }
+    else {
+        return `${number}B`;
     }
 }
