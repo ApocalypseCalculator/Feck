@@ -1,0 +1,20 @@
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model File {
+    id   String @id
+    name String @default("unknown")
+    date Int
+    size Int
+}
+
+model CSRF {
+    token     String @id
+    generated Int
+}

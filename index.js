@@ -10,7 +10,8 @@ const notif = require('./notif');
 const package = require('./package.json');
 const tools = require('./tools');
 
-const sqlite3 = require('sqlite3');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const app = express();
 const limiter = rateLimit({
@@ -36,59 +37,54 @@ tools.configChecks().then(() => {
 app.post('/upload', function (req, res) {
     try {
         if (req.headers.csrftoken) {
-            let db = new sqlite3.Database('./data/data.db', sqlite3.OPEN_READWRITE, (err) => {
-                if (err) {
-                    console.error(err.message);
-                    res.send('Error occurred').end();
-                    return;
+            prisma.cSRF.findUnique({
+                where: {
+                    token: req.headers.csrftoken
                 }
-            });
-            db.get(`SELECT * FROM csrf WHERE token = ?`, [req.headers.csrftoken], (err, row) => {
-                if (err) {
-                    res.sendStatus(500).end();
-                }
-                else if (!row) {
-                    res.send(`I see what you're trying to do and I don't like it`);
+            }).then(value => {
+                if (!value) {
+                    res.send("Error occurred");
                 }
                 else {
-                    db.run(`DELETE FROM csrf WHERE token = ?`, [req.headers.csrftoken], (err) => {
-                        if (err) {
-                            res.sendStatus(500).end();
+                    prisma.cSRF.delete({
+                        where: {
+                            token: req.headers.csrftoken
                         }
-                        else if (Date.now() - row.generated >= 7200000) {
-                            res.send(`Your session has expired`);
-                        }
-                        else {
-                            let id = nanoid.nanoid();
-                            var busboy = new Busboy({ headers: req.headers });
-                            let name = "";
-                            let size = formatSize(req.headers["content-length"]);
-                            busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-                                if (filename) {
-                                    fs.mkdirSync(`./uploads/${id}`);
-                                    var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
-                                    name = `${filename}`;
-                                    db.run(`INSERT INTO files(name,id,date, size) VALUES(?,?,?,?)`, [filename, id, Date.now(), size], function (err) {
-                                        db.close((err) => { });
-                                        if (err) {
-                                            console.log(err);
-                                            res.sendStatus(500).end();
-                                        }
-                                    })
-                                    file.pipe(fs.createWriteStream(saveTo));
-                                }
-                                else {
-                                    res.status(400).send('No file attached?');
-                                }
-                            });
-                            busboy.on('finish', function () {
-                                notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
-                                    res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
-                                }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
-                            });
-                            return req.pipe(busboy);
-                        }
-                    })
+                    }).catch(() => { });
+                    if (Date.now() - value.generated >= 7200000) {
+                        res.send(`Your session has expired`);
+                    }
+                    else {
+                        let id = nanoid.nanoid();
+                        var busboy = new Busboy({ headers: req.headers });
+                        let name = "";
+                        let size = formatSize(req.headers["content-length"]);
+                        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+                            if (filename) {
+                                fs.mkdirSync(`./uploads/${id}`);
+                                var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
+                                name = `${filename}`;
+                                prisma.file.create({
+                                    data: {
+                                        id: id,
+                                        name: filename,
+                                        date: Date.now(),
+                                        size: size
+                                    }
+                                }).catch(() => res.status(500).end());
+                                file.pipe(fs.createWriteStream(saveTo));
+                            }
+                            else {
+                                res.status(400).send('No file attached?');
+                            }
+                        });
+                        busboy.on('finish', function () {
+                            notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
+                                res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
+                            }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
+                        });
+                        return req.pipe(busboy);
+                    }
                 }
             })
 
@@ -105,23 +101,14 @@ app.post('/upload', function (req, res) {
 });
 
 app.post('/api/downloads', function (req, res) {
-    let db = new sqlite3.Database('./data/data.db', sqlite3.OPEN_READWRITE, (err) => {
-        if (err) {
-            console.error(err.message);
-            res.send('Error occurred').end();
-            return;
+    prisma.file.findMany({
+        orderBy: {
+            date: 'desc'
         }
-    });
-    db.all(`SELECT * FROM files ORDER BY date DESC`, function (err, rows) {
-        db.close((err) => { });
-        if (err) {
-            res.sendStatus(500).end();
-        }
-        else {
-            let raw = JSON.stringify(rows);
-            res.send(raw).end();
-        }
-    });
+    }).then(data => {
+        let raw = JSON.stringify(data);
+        res.send(raw).end();
+    })
 })
 
 app.use('/uploads', function (req, res) {
@@ -141,23 +128,15 @@ app.use('/site/files', function (req, res) {
 })
 
 app.use('/upload', function (req, res) {
-    let db = new sqlite3.Database('./data/data.db', sqlite3.OPEN_READWRITE, (err) => {
-        if (err) {
-            console.error(err.message);
-            res.send('Error occurred').end();
-            return;
-        }
-    });
     let csrf = nanoid.nanoid(60);
-    db.run(`INSERT INTO csrf(token, generated) VALUES(?,?)`, [csrf, Date.now()], (err) => {
-        if (err) {
-            res.sendStatus(500).end();
+    prisma.cSRF.create({
+        data: {
+            token: csrf,
+            generated: Date.now()
         }
-        else {
-            //yes I know this is very ugly but it will do for now
-            res.send(fs.readFileSync('./templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
-        }
-    })
+    }).then(() => {
+        res.send(fs.readFileSync('./templates/upload.html').toString().replace('<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="">', `<input class="text" type="hidden" id="csrftoken" name="csrftoken" value="${csrf}">`));
+    }).catch(() => res.sendStatus(500).end());
 })
 
 app.use('/home', function (req, res) {
