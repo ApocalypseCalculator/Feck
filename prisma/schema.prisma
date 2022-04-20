@@ -11,7 +11,7 @@ model File {
     id   String @id
     name String @default("unknown")
     date Int
-    size String
+    size Int
 }
 
 model CSRF {

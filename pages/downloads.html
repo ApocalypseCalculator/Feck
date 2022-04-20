@@ -58,7 +58,7 @@
                     document.getElementById("status").remove();
                     parsed.forEach(p => {
                         let tr = document.createElement("tr");
-                        tr.innerHTML = `<td>${p.name}</td><td>${p.size}</td><td>${new Date(p.date).toLocaleString()}</td><td><button class="btn btn-info btn-sm"><a href="/uploads/${p.id}/${encodeURIComponent(p.name)}" style="color: azure;" target="_blank"rel="noopener noreferrer">Download</a></button></td>`;
+                        tr.innerHTML = `<td>${p.name}</td><td>${formatSize(parseInt(p.size))}</td><td>${new Date(p.date).toLocaleString()}</td><td><button class="btn btn-info btn-sm"><a href="/uploads/${p.id}/${encodeURIComponent(p.name)}" style="color: azure;" target="_blank"rel="noopener noreferrer">Download</a></button></td>`;
                         document.getElementById("myTable").appendChild(tr);
                     })
                 }
@@ -83,6 +83,19 @@
                         tr[i].style.display = "none";
                     }
                 }
+            }
+        }
+        function formatSize(number) {
+            if (number >= 1024 * 1024) {
+                let mbSize = parseInt(number / (1024 * 1024));
+                return `${mbSize}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
+            }
+            else if (number >= 1024) {
+                let kbSize = parseInt(number / (1024));
+                return `${kbSize}KB`;
+            }
+            else {
+                return `${number}B`;
             }
         }
     </script>

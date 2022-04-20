@@ -36,7 +36,7 @@ module.exports.execute = function (req, res) {
                         let id = nanoid.nanoid();
                         var busboy = Busboy({ headers: req.headers });
                         let name = "";
-                        let size = formatSize(req.headers["content-length"]);
+                        let size = parseInt(req.headers["content-length"]);
                         busboy.on('file', function (anme, file, info) {
                             let { filename, encoding, mimeType } = info;
                             if (filename) {
@@ -79,18 +79,4 @@ module.exports.execute = function (req, res) {
             res.sendStatus(500).end();
         } catch { }
     };
-}
-
-function formatSize(number) {
-    if (number >= 1024 * 1024) {
-        let mbSize = parseInt(number / (1024 * 1024));
-        return `${mbSize}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
-    }
-    else if (number >= 1024) {
-        let kbSize = parseInt(number / (1024));
-        return `${kbSize}KB`;
-    }
-    else {
-        return `${number}B`;
-    }
 }
