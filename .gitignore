@@ -1,3 +1,7 @@
+# Prisma
+*.db
+prisma/migrations
+
 # Logs
 logs
 *.log
