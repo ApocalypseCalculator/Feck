@@ -48,7 +48,7 @@
         }
     </style>
     <script>
-        $.post('/api/downloads', function (data, status) {
+        $.get('/api/downloads', function (data, status) {
             if (status == "success") {
                 let parsed = JSON.parse(data);
                 if (parsed.length == 0) {
