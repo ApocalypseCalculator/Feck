@@ -56,10 +56,11 @@ app.post('/upload', function (req, res) {
                     }
                     else {
                         let id = nanoid.nanoid();
-                        var busboy = new Busboy({ headers: req.headers });
+                        var busboy = Busboy({ headers: req.headers });
                         let name = "";
                         let size = formatSize(req.headers["content-length"]);
-                        busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+                        busboy.on('file', function (anme, file, info) {
+                            let { filename, encoding, mimeType } = info;
                             if (filename) {
                                 fs.mkdirSync(`./uploads/${id}`);
                                 var saveTo = path.join(__dirname, `uploads/${id}/` + filename);
@@ -71,7 +72,9 @@ app.post('/upload', function (req, res) {
                                         date: Date.now(),
                                         size: size
                                     }
-                                }).catch(() => res.status(500).end());
+                                }).catch((err) => {
+                                    console.log(err);
+                                });
                                 file.pipe(fs.createWriteStream(saveTo));
                             }
                             else {
@@ -80,8 +83,8 @@ app.post('/upload', function (req, res) {
                         });
                         busboy.on('finish', function () {
                             notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
-                                res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`);
-                            }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`));
+                                res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`).end();
+                            }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`).end());
                         });
                         return req.pipe(busboy);
                     }
