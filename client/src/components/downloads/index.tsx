@@ -61,14 +61,16 @@ function GenerateTable(files: any) {
     console.log(files.files);
     let table = files.files.map((file: { name: string; size: string; date: number; id: string; }) => {
         return (<>
-            <td>{file.name}</td>
-            <td>{formatSize(parseInt(file.size))}</td>
-            <td>{new Date(file.date).toLocaleString()}</td>
-            <td>
-                <button className={"btn btn-info btn-sm"}>
-                    <a href={`/uploads/${file.id}/${encodeURIComponent(file.name)}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
-                </button>
-            </td>
+            <tr>
+                <td className="filename">{file.name}</td>
+                <td>{formatSize(parseInt(file.size))}</td>
+                <td>{new Date(file.date).toLocaleString()}</td>
+                <td>
+                    <button className={"btn btn-info btn-sm"}>
+                        <a href={`/uploads/${file.id}/${encodeURIComponent(file.name)}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
+                    </button>
+                </td>
+            </tr>
         </>);
     });
     return (<>{table}</>);

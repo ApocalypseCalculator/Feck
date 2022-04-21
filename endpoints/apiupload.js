@@ -6,7 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const nanoid = require('nanoid');
 
-module.exports.name = "/upload";
+module.exports.name = "/api/upload";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
@@ -21,7 +21,7 @@ module.exports.execute = function (req, res) {
                 }
             }).then(value => {
                 if (!value) {
-                    res.send("Error occurred");
+                    res.status(401).json({ error: `Invalid CSRF token` });
                 }
                 else {
                     prisma.cSRF.delete({
@@ -30,7 +30,7 @@ module.exports.execute = function (req, res) {
                         }
                     }).catch(() => { });
                     if (Date.now() - value.generated >= 7200000) {
-                        res.send(`Your session has expired`);
+                        res.status(401).json({ error: `Your session has expired` });
                     }
                     else {
                         let id = nanoid.nanoid();
@@ -56,13 +56,13 @@ module.exports.execute = function (req, res) {
                                 file.pipe(fs.createWriteStream(saveTo));
                             }
                             else {
-                                res.status(400).send('No file attached?');
+                                res.status(400).json({ error: 'No file attached?' });
                             }
                         });
                         busboy.on('finish', function () {
                             notif.sendNotif(name, id, req.hostname, req.ip, size).then(() => {
-                                res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`).end();
-                            }).catch(() => res.send(`/success?filename=${encodeURIComponent(name)}&fileid=${id}`).end());
+                                res.json({ filename: name, fileid: id }).end();
+                            }).catch(() => res.json({ filename: name, fileid: id }).end());
                         });
                         return req.pipe(busboy);
                     }
@@ -71,12 +71,12 @@ module.exports.execute = function (req, res) {
 
         }
         else {
-            res.send(`I see what you're trying to do and I don't like it`);
+            res.status(400).json({ error: `Error occurred, try reloading` });
         }
     }
     catch {
         try {
-            res.sendStatus(500).end();
+            res.status(500).json({ error: "Internal server error" }).end();
         } catch { }
     };
 }

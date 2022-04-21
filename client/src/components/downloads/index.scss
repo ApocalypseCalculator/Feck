@@ -22,6 +22,10 @@
     padding: 12px;
 }
 
+.filename {
+    word-break: break-all;
+}
+
 #myTable tr {
     border-bottom: 1px solid rgba(221, 221, 221, 0.123);
 }

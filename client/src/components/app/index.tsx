@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { Home } from "../home";
 import { Downloads } from "../downloads";
+import { Upload } from "../upload";
 import { NotFound } from "../notfound";
 
 export const _App = () => {
@@ -28,6 +29,7 @@ export const _App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/downloads" element={<Downloads />} />
+                    <Route path="/upload" element={<Upload />} />
                     <Route path="*" element={<NotFound />} />
                     {/*<Route path="/" element={<Home />} />
                     <Route path="/error" element={<ErrorPage />} />
