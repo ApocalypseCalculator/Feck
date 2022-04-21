@@ -92,4 +92,3 @@ function UploadContainer(props: any) {
         return <></>
     }
 }
-//onsubmit="sendData();return false;"
