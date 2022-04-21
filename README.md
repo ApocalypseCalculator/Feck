@@ -50,29 +50,6 @@ If you have trouble setting it up, you can DM me on Discord for help at Apocalyp
 - `on` whether to turn on Discord notifications or not (true for on false for off)
 - `webhook` the Discord webhook link (only required if on is set to true)
 
-`database`
-- `sqlite` whether to use SQLite or JSON as database (true for SQLite, false for JSON)
-
-## Folders and Subfolders
-
-Uploads is the folder where all the uploads are stored, inside will be subfolders of `file_id/file_name`
-
-Pages are static pages
-
-Templates are pages that require some meddling before being sent to the user, such as CSRF token placement. 
-
-Data is the folder storing data such as site database, website icons, etc. 
-
-## Extras
-
-Feck Files currently comes with 2 standalone scripts: 
-
-- `csrfclean.js` 
-
-This is a script that cleans up unused CSRF tokens in the database. It is recommended to manage this task through a cronjob or run it manually every once in a while. 
-- `sync.js`
-
-If you ever feel the need to switch to SQLite or to JSON database, you can sync the data between both by running the script with an argument to specify which database to copy from. 
 
 ## Licensing and others
 
