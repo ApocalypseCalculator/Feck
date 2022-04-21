@@ -1,6 +1,7 @@
 const express = require("express");
 const cookieparser = require('cookie-parser');
 const rateLimit = require("express-rate-limit");
+const contentdisp = require('content-disposition');
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
@@ -20,7 +21,9 @@ app.use(express.json({ strict: true }));
 app.enable('trust proxy');
 
 app.use('/site/files', express.static('static'));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads', {setHeaders: (res, path) => {
+    res.setHeader('Content-Disposition', contentdisp(path));
+}}));
 
 var endpoints = {};
 fs.readdirSync("./endpoints/").forEach(function (file) {
