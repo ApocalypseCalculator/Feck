@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ strict: true }));
 app.enable('trust proxy');
 
-app.use('/site/files', express.static('data/files'));
+app.use('/site/files', express.static('static'));
 app.use('/uploads', express.static('uploads'));
 
 var endpoints = {};
