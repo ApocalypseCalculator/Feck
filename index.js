@@ -21,9 +21,11 @@ app.use(express.json({ strict: true }));
 app.enable('trust proxy');
 
 app.use('/site/files', express.static('static'));
-app.use('/uploads', express.static('uploads', {setHeaders: (res, path) => {
-    res.setHeader('Content-Disposition', contentdisp(path));
-}}));
+app.use('/uploads', express.static('uploads', {
+    setHeaders: (res, path) => {
+        res.setHeader('Content-Disposition', contentdisp(path));
+    }
+}));
 
 var endpoints = {};
 fs.readdirSync("./endpoints/").forEach(function (file) {
