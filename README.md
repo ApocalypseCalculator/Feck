@@ -15,14 +15,19 @@ This repository was forked from my original project with git completely reset to
 
 ## Installation
 
-Download the latest release onto your pc, then launch your terminal and navigate to the folder
+Download the latest release onto your pc
 
 Run 
 ```
 npm install
 ```
-
-If you don't have npm you can install it from the official site or through snapd (it comes with nodejs)
+Build client
+```
+npm install -g vite
+cd client
+vite build
+cd ..
+```
 
 After you finish that, start the server using 
 
