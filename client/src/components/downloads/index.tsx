@@ -6,7 +6,8 @@ import "./index.scss";
 export const Downloads = () => {
     let [loaded, setLoaded] = React.useState(false);
     let [loadtext, setLoadtext] = React.useState("Loading...");
-    let [files, setFiles] = React.useState<any[]>([])
+    let [files, setFiles] = React.useState<any[]>([]);
+    let [search, setSearch] = React.useState("");
 
     React.useEffect(() => {
         axios.default.get('/api/downloads').then((res) => {
@@ -23,6 +24,10 @@ export const Downloads = () => {
         });
     }, []);
 
+    function updateSearch(event: any) {
+        setSearch(event.target.value);
+    }
+
     return (
         <div className={"downloads"}>
             <div className={"jumbotron jumbotron-fluid"}>
@@ -35,7 +40,7 @@ export const Downloads = () => {
                 <p>Here is a list of all the uploaded files. You can filter the results using the search bar</p>
             </div>
             <div className={"container"}>
-                <input type={"text"} id={"myInput"} placeholder={"Search for names.."}></input>
+                <input type={"text"} id={"myInput"} placeholder={"Search for names.."} onInput={updateSearch}></input>
                 <table id={"myTable"}>
                     <tr className={"header"}>
                         <th>Name</th>
@@ -49,7 +54,7 @@ export const Downloads = () => {
                                 <td>{loadtext}</td>
                             </tr>
                             :
-                            <GenerateTable files={files} />
+                            <GenerateTable files={files} search={search} />
                     }
                 </table>
             </div>
@@ -58,20 +63,21 @@ export const Downloads = () => {
 }
 
 function GenerateTable(files: any) {
-    console.log(files.files);
     let table = files.files.map((file: { name: string; size: string; date: number; id: string; }) => {
-        return (<>
-            <tr>
-                <td className="filename">{file.name}</td>
-                <td>{formatSize(parseInt(file.size))}</td>
-                <td>{new Date(file.date).toLocaleString()}</td>
-                <td>
-                    <button className={"btn btn-info btn-sm"}>
-                        <a href={`/uploads/${file.id}/${encodeURIComponent(file.name)}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
-                    </button>
-                </td>
-            </tr>
-        </>);
+        if (files.search === "" || file.name.toLowerCase().indexOf(files.search.toLowerCase()) > -1) {
+            return (<>
+                <tr>
+                    <td className="filename">{file.name}</td>
+                    <td>{formatSize(parseInt(file.size))}</td>
+                    <td>{new Date(file.date).toLocaleString()}</td>
+                    <td>
+                        <button className={"btn btn-info btn-sm"}>
+                            <a href={`/uploads/${file.id}/${encodeURIComponent(file.name)}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
+                        </button>
+                    </td>
+                </tr>
+            </>);
+        }
     });
     return (<>{table}</>);
 }
