@@ -47,6 +47,13 @@ Now build the client
 vite build
 ```
 
+### Setting up database
+
+This will create a `data.db` file in the prisma folder.
+```
+npx prisma migrate dev
+```
+
 
 ### Setting up Nginx
 

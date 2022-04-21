@@ -28,6 +28,10 @@ cd client
 vite build
 cd ..
 ```
+Migrate db schema
+```
+npx prisma migrate dev
+```
 
 After you finish that, start the server using 
 
