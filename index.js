@@ -4,6 +4,7 @@ const rateLimit = require("express-rate-limit");
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
+const tasks = require('./tasks');
 
 const app = express();
 const PORT = 8080;
@@ -58,3 +59,7 @@ app.use('/', function (req, res) {
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+
+setInterval(() => {
+    tasks.cleanCSRF();
+}, 1 * 60 * 60 * 1000) //1 hour
