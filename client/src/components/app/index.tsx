@@ -31,12 +31,6 @@ export const _App = () => {
                     <Route path="/downloads" element={<Downloads />} />
                     <Route path="/upload" element={<Upload />} />
                     <Route path="*" element={<NotFound />} />
-                    {/*<Route path="/" element={<Home />} />
-                    <Route path="/error" element={<ErrorPage />} />
-                    <Route path="/drawing/:page" element={<Drawing />} />
-                    <Route path="/editor" element={<Editor />} />
-                    <Route path="/settings" element={<Settings />} />
-    <Route path="/link-submission" element={<XSSSubmission /> } />*/}
                 </Routes>
             </div>
         </div>
