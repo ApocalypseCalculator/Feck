@@ -21,7 +21,7 @@ module.exports.execute = function (req, res, next) {
             }
         }).then(file => {
             if (file) {
-                if(file.type == "private") {
+                if(file.type == "private" && !file.deleted) {
                     try {
                         let user = jwt.verify(req.headers.authorization, config.secrets.jwt);
                         if(file.userid === user.userid) {

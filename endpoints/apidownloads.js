@@ -17,10 +17,10 @@ module.exports.execute = function (req, res) {
     catch { }
     prisma.file.findMany({
         where: {
-            type: "public",
             OR: [
                 {
-                    type: "public"
+                    type: "public",
+                    deleted: false
                 },
                 {
                     AND: {
