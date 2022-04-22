@@ -4,7 +4,7 @@ const config = require('../config')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-module.exports.name = "/api/register";
+module.exports.name = "/api/login";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;

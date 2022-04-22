@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 
-module.exports.name = "/uploads/*";
+module.exports.name = "/api/delete";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;

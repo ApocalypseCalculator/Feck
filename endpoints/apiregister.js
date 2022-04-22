@@ -26,8 +26,8 @@ module.exports.execute = function (req, res) {
                     }
                 }).catch(() => { });
                 if (req.body.username && req.body.password) {
-                    if (!/^\w+$/.test(req.body.username)) {
-                        res.status(400).json({ error: `Usernames can only contain alphanumeric characters or underscores` });
+                    if (!/^\w+$/.test(req.body.username) || req.body.username.length > 32) {
+                        res.status(400).json({ error: `Usernames can only contain alphanumeric characters or underscores and must be at most 33 characters` });
                     }
                     else if (!/^\w+$/.test(req.body.password) || req.body.password.length < 8) {
                         res.status(400).json({ error: `Passwords can only contain alphanumeric characters or underscores and must be at least 8 characters` });
