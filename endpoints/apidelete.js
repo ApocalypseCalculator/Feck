@@ -7,7 +7,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 
 module.exports.name = "/uploads/*";
-module.exports.method = "GET";
+module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
 }
