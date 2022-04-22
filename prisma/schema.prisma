@@ -1,20 +1,34 @@
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
+model User {
+  id           String @id
+  username     String @unique
+  password     String
+  recovery     String
+  registertime Int
+  File         File[]
+}
+
+//the type field in File is either "public", "private", or "unlisted"
 model File {
-    id   String @id
-    name String @default("unknown")
-    date Int
-    size Int
+  id      String  @id
+  name    String  @default("unknown")
+  date    Int
+  size    Int
+  type    String  @default("public")
+  deleted Boolean @default(false)
+  user    User?   @relation(fields: [userid], references: [id])
+  userid  String?
 }
 
 model CSRF {
-    token     String @id
-    generated Int
+  token     String @id
+  generated Int
 }

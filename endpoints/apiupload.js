@@ -5,6 +5,8 @@ const notif = require('../notif');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const nanoid = require('nanoid');
+const jwt = require("jsonwebtoken");
+const config = require('../config');
 
 module.exports.name = "/api/upload";
 module.exports.method = "POST";
@@ -29,8 +31,20 @@ module.exports.execute = function (req, res) {
                             token: req.headers.csrftoken
                         }
                     }).catch(() => { });
+                    let user = null;
+                    try {
+                        user = jwt.verify(req.headers.authorization, config.secrets.jwt);
+                    }
+                    catch { }
+                    let type = "public";
+                    if (["public", "unlisted", "private"].includes(req.body.type)) {
+                        type = req.body.type;
+                    }
                     if (Date.now() - value.generated >= 7200000) {
                         res.status(401).json({ error: `Your session has expired` });
+                    }
+                    else if (type == "private" && !user) {
+                        res.status(401).json({ error: `You must be logged in to upload private files` });
                     }
                     else {
                         let id = nanoid.nanoid();
@@ -48,7 +62,9 @@ module.exports.execute = function (req, res) {
                                         id: id,
                                         name: filename,
                                         date: Date.now(),
-                                        size: size
+                                        size: size,
+                                        type: type, //public, private, or unlisted
+                                        userid: user ? user.userid : null
                                     }
                                 }).catch((err) => {
                                     console.log(err);

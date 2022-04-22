@@ -8,5 +8,8 @@ module.exports = {
     discord: {
         on: false, //switch this to true to turn it on, false to turn it off
         webhook: 'your webhook link'
+    },
+    secrets: {
+        jwt: "jwt signing secret here"
     }
 }
