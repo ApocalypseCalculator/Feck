@@ -1,7 +1,6 @@
 const express = require("express");
 const cookieparser = require('cookie-parser');
 const rateLimit = require("express-rate-limit");
-const contentdisp = require('content-disposition');
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
@@ -21,11 +20,6 @@ app.use(express.json({ strict: true }));
 app.enable('trust proxy');
 
 app.use('/site/files', express.static('static'));
-app.use('/uploads', express.static('uploads', {
-    setHeaders: (res, path) => {
-        res.setHeader('Content-Disposition', contentdisp(path));
-    }
-}));
 
 var endpoints = {};
 fs.readdirSync("./endpoints/").forEach(function (file) {
@@ -38,10 +32,10 @@ fs.readdirSync("./endpoints/").forEach(function (file) {
         );
     } else {
         endpoints[m.name] = m.method;
-        app[m.method.toLowerCase()](m.name, (req, res) => {
-            if (m.verify(req, res)) {
+        app[m.method.toLowerCase()](m.name, (req, res, next) => {
+            if (m.verify(req, res, next)) {
                 try {
-                    m.execute(req, res);
+                    m.execute(req, res, next);
                 }
                 catch {
                     res.sendStatus(500).end();

@@ -72,7 +72,7 @@ function GenerateTable(files: any) {
                     <td>{new Date(file.date).toLocaleString()}</td>
                     <td>
                         <button className={"btn btn-info btn-sm"}>
-                            <a href={`/uploads/${file.id}/${encodeURIComponent(file.name)}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
+                            <a href={`/uploads/?fileid=${file.id}`} style={{ color: 'azure' }} target={"_blank"} rel={"noopener noreferrer"}>Download</a>
                         </button>
                     </td>
                 </tr>
