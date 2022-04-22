@@ -9,6 +9,9 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     prisma.file.findMany({
+        where: {
+            type: "public"
+        },
         orderBy: {
             date: 'desc'
         }
