@@ -89,6 +89,10 @@ export const Login = () => {
                                     ev.preventDefault();
                                     nav("/register");
                                 }}>Register</a> instead</p>
+                                <p style={{ textAlign: "center" }}>Forgot your password? Reset it <a href={"/login"} onClick={(ev) => {
+                                    ev.preventDefault();
+                                    nav("/forgot");
+                                }}>here</a></p>
                             </form>
                         </div>
                     </div>

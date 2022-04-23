@@ -25,7 +25,7 @@ module.exports.execute = function (req, res) {
                         token: req.headers.csrftoken
                     }
                 }).catch(() => { });
-                if (req.body.username && req.body.password && rec.body.recovery) {
+                if (req.body.username && req.body.password && req.body.recovery) {
                     if (!/^\w+$/.test(req.body.password) || req.body.password.length < 8) {
                         res.status(400).json({ error: `Passwords can only contain alphanumeric characters or underscores and must be at least 8 characters` });
                     }
@@ -41,6 +41,7 @@ module.exports.execute = function (req, res) {
                             else {
                                 bcrypt.compare(req.body.recovery, user.recovery, function (err, result) {
                                     if (err) {
+                                        console.log(err);
                                         res.status(401).json({ error: "Internal server error" });
                                     }
                                     else if (!result) {
@@ -49,12 +50,14 @@ module.exports.execute = function (req, res) {
                                     else {
                                         bcrypt.hash(req.body.password, 10, function (err3, pwdhash) {
                                             if (err3) {
+                                                console.log(err3);
                                                 res.status(500).json({ error: `Internal server error` });
                                             }
                                             else {
                                                 let recovery = nanoid.nanoid(25);
                                                 bcrypt.hash(recovery, 10, function (err2, rechash) {
                                                     if (err2) {
+                                                        console.log(err2);
                                                         res.status(500).json({ error: `Internal server error` });
                                                     }
                                                     else {
@@ -68,7 +71,7 @@ module.exports.execute = function (req, res) {
                                                             }
                                                         }).then(() => {
                                                             res.json({ recovery: recovery });
-                                                        }).catch(() => res.status(500).json({ error: "Internal server error" }));
+                                                        })//.catch(() => res.status(500).json({ error: "Internal server error" }));
                                                     }
                                                 });
                                             }
@@ -76,7 +79,7 @@ module.exports.execute = function (req, res) {
                                     }
                                 });
                             }
-                        }).catch(() => res.status(500).json({ error: "Internal server error" }));
+                        })//.catch(() => res.status(500).json({ error: "Internal server error" }));
                     }
                 }
                 else {

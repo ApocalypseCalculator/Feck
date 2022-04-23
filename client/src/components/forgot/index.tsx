@@ -38,7 +38,7 @@ export const Forgot = () => {
             setRegistering(false);
         }
         else {
-            axios.default.post('/api/register', {
+            axios.default.post('/api/recover', {
                 username: username,
                 password: pwd1,
                 recovery: recover
