@@ -47,7 +47,15 @@ export const _App = () => {
                             <span id={"navbaruser"}>
                                 {
                                     session.user.loggedin ? <>
-                                        Hello, <b>{session.user.username}</b>
+                                        <a className={"nav-link dropdown-toggle"} href={"#"} data-toggle={"dropdown"}>
+                                            Hello, <b>{session.user.username}</b>
+                                        </a>
+                                        <div className={"dropdown-menu dropdown-menu-right"}>
+                                            <a className={"dropdown-item"} href={"#"} onClick={(ev) => {
+                                                ev.preventDefault();
+                                                session.updateToken("");
+                                            }}>Logout</a>
+                                        </div>
                                     </> :
                                         <>
                                             <a href={"/login"} onClick={(ev) => {

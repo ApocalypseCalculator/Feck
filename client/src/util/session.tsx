@@ -36,13 +36,23 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
     function updateToken(token: string) {
         setToken(token);
         localStorage.setItem("token", token);
-        let decoded: any = jwt_decode(token);
-        setUser({
-            loggedin: true,
-            username: decoded.username,
-            userid: decoded.userid,
-            registertime: decoded.registertime
-        });
+        if (token !== "") {
+            let decoded: any = jwt_decode(token);
+            setUser({
+                loggedin: true,
+                username: decoded.username,
+                userid: decoded.userid,
+                registertime: decoded.registertime
+            });
+        }
+        else {
+            setUser({
+                loggedin: false,
+                username: "",
+                userid: "",
+                registertime: 0
+            })
+        }
     }
     React.useEffect(() => {
         let storagetoken = localStorage.getItem("token");
