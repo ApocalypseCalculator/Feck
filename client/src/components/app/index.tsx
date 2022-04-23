@@ -1,6 +1,8 @@
 import * as React from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
+import { SessionProvider } from "../../util/session";
+
 import { Home } from "../home";
 import { Downloads } from "../downloads";
 import { Upload } from "../upload";
@@ -57,7 +59,9 @@ export const _App = () => {
 export const App = () => {
     return (
         <BrowserRouter>
-            <_App />
+            <SessionProvider>
+                <_App />
+            </SessionProvider>
         </BrowserRouter>
     );
 }
