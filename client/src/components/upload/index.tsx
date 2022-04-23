@@ -1,9 +1,11 @@
 import * as React from "react";
 import * as axios from "axios";
+import { SessionContext } from "../../util/session";
 
 import "./index.scss";
 
 export const Upload = () => {
+    const session = React.useContext(SessionContext);
     let [csrf, setCsrf] = React.useState("");
     let [percentdone, setPercentdone] = React.useState(0);
     let [status, setStatus] = React.useState("form");
@@ -23,7 +25,8 @@ export const Upload = () => {
         let fd = new FormData(e.target as HTMLFormElement);
         axios.default.post('/api/upload', fd, {
             headers: {
-                "csrftoken": csrf
+                "csrftoken": csrf,
+                "authorization": session.token
             },
             onUploadProgress: (progresse: ProgressEvent) => {
                 if (progresse.lengthComputable) {
