@@ -53,8 +53,9 @@ module.exports.execute = function (req, res) {
                                                 recovery: rechash,
                                                 registertime: Date.now()
                                             }
-                                        });
-                                        res.json({ recovery: recovery });
+                                        }).then(() => {
+                                            res.json({ recovery: recovery });
+                                        }).catch(() => res.status(500).json({ error: "Internal server error" }));
                                     }
                                 });
                             }
