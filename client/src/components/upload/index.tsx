@@ -87,7 +87,7 @@ function UploadContainer(props: any) {
                 <strong>Success!</strong> Uploaded your file <b>{props.resdata.filename}</b> successfully.
             </div>
             <div className={"container"}>
-                <p>You can access your uploaded file <a href={`/uploads/${props.resdata.fileid}/${props.resdata.filename}`} target={"_blank"} rel={"noopener noreferrer"}
+                <p>You can access your uploaded file <a href={`/uploads/?fileid=${props.resdata.fileid}`} target={"_blank"} rel={"noopener noreferrer"}
                     id={"clicklink"}>here</a></p>
             </div></>);
     }
