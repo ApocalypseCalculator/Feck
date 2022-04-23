@@ -7,6 +7,7 @@ import { Upload } from "../upload";
 import { NotFound } from "../notfound";
 import { Login } from "../login";
 import { Register } from "../register";
+import { Forgot } from "../forgot";
 
 export const _App = () => {
     const nav = useNavigate();
@@ -45,6 +46,7 @@ export const _App = () => {
                     <Route path="/upload" element={<Upload />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/forgot" element={<Forgot />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
