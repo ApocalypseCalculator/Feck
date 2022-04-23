@@ -44,6 +44,7 @@ export const Downloads = () => {
                 <table id={"myTable"}>
                     <tr className={"header"}>
                         <th>Name</th>
+                        <th>Uploader</th>
                         <th>Size</th>
                         <th>Upload Time</th>
                         <th>Download Links</th>
@@ -63,11 +64,14 @@ export const Downloads = () => {
 }
 
 function GenerateTable(files: any) {
-    let table = files.files.map((file: { name: string; size: string; date: number; id: string; }) => {
+    let table = files.files.map((file: any) => {
         if (files.search === "" || file.name.toLowerCase().indexOf(files.search.toLowerCase()) > -1) {
             return (<>
                 <tr>
                     <td className="filename">{file.name}</td>
+                    <td className="filename">{
+                        file.userid ? file.user.username : ""
+                    }</td>
                     <td>{formatSize(parseInt(file.size))}</td>
                     <td>{new Date(file.date).toLocaleString()}</td>
                     <td>
