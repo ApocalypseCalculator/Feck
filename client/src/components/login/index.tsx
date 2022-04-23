@@ -44,6 +44,7 @@ export const Login = () => {
         }).then((res) => {
             if (res.data.token) {
                 localStorage.setItem("token", res.data.token);
+                nav("/");
             }
             else {
                 setErr(res.data.error);
