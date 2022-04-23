@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
-import { SessionProvider } from "../../util/session";
+import { SessionProvider, SessionContext } from "../../util/session";
 
 import { Home } from "../home";
 import { Downloads } from "../downloads";
@@ -11,8 +11,11 @@ import { Login } from "../login";
 import { Register } from "../register";
 import { Forgot } from "../forgot";
 
+import "./index.scss";
+
 export const _App = () => {
     const nav = useNavigate();
+    const session = React.useContext(SessionContext);
 
     return (
         <div className="page">
@@ -37,6 +40,31 @@ export const _App = () => {
                                 ev.preventDefault();
                                 nav("/upload");
                             }}>Upload A File</a>
+                        </li>
+                    </ul>
+                    <ul className={"navbar-nav ml-auto"}>
+                        <li className={"nav-item"}>
+                            <span id={"navbaruser"}>
+                                {
+                                    session.user.loggedin ? <>
+                                        Hello, <b>{session.user.username}</b>
+                                    </> :
+                                        <>
+                                            <a href={"/login"} onClick={(ev) => {
+                                                ev.preventDefault();
+                                                nav("/login");
+                                            }}>
+                                                <b>Log in</b>
+                                            </a>
+                                            &nbsp;or&nbsp;
+                                            <a href={"/register"} onClick={(ev) => {
+                                                ev.preventDefault();
+                                                nav("/register");
+                                            }}>
+                                                <b>Register</b>
+                                            </a></>
+                                }
+                            </span>
                         </li>
                     </ul>
                 </div>

@@ -1,11 +1,13 @@
 import * as React from "react";
 import * as axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SessionContext } from "../../util/session";
 
 import "./index.scss";
 
 export const Login = () => {
     const nav = useNavigate();
+    const session = React.useContext(SessionContext);
 
     let [csrf, setCsrf] = React.useState("");
     let [username, setUsername] = React.useState("");
@@ -43,7 +45,7 @@ export const Login = () => {
             }
         }).then((res) => {
             if (res.data.token) {
-                localStorage.setItem("token", res.data.token);
+                session.updateToken(res.data.token);
                 nav("/");
             }
             else {
