@@ -83,7 +83,7 @@ export const Downloads = () => {
                 <table id={"myTable"}>
                     <tr className={"header"}>
                         <th>Name</th>
-                        {(pubview && session.user.loggedin) ? <th>Uploader</th> : <></>}
+                        {(pubview && session.user.loggedin) ? <th>Uploader</th> : <th>Type</th>}
                         <th>Size</th>
                         <th>Upload Time</th>
                         <th>Download Links</th>
@@ -94,7 +94,7 @@ export const Downloads = () => {
                                 <td>{loadtext}</td>
                             </tr>
                             :
-                            <GenerateTable files={files} search={search} pubview={pubview} opendelete={openDeleteModal} />
+                            <GenerateTable files={files} search={search} pubview={pubview} opendelete={openDeleteModal}/>
                     }
                 </table>
             </div>
@@ -115,7 +115,8 @@ function GenerateTable(props: any) {
                             props.pubview ?
                                 (<td className="breakname">{
                                     file.userid ? file.user.username : ""
-                                }</td>) : (<></>)
+                                }</td>) :
+                                (<td>{file.type}</td>)
                         }
                         <td>{formatSize(parseInt(file.size))}</td>
                         <td>{new Date(file.date).toLocaleString()}</td>
@@ -143,7 +144,7 @@ function GenerateTable(props: any) {
             }
         }
     });
-    table = table.filter((t:any) => t);
+    table = table.filter((t: any) => t);
     if (table.length == 0) {
         return (<tr><td>No files to display</td></tr>);
     }
