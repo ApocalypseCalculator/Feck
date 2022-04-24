@@ -6,6 +6,7 @@ import { InfoProvider } from "../../util/info";
 
 import { Home } from "../home";
 import { Downloads } from "../downloads";
+import { Download } from "../download";
 import { Upload } from "../upload";
 import { NotFound } from "../notfound";
 import { Login } from "../login";
@@ -83,6 +84,7 @@ export const _App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/downloads" element={<Downloads />} />
+                    <Route path="/download" element={<Download />} />
                     <Route path="/upload" element={<Upload />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />

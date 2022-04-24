@@ -28,7 +28,10 @@ module.exports.execute = function (req, res) {
                 }
             }
         }).then(file => {
-            if(file.type === "private") {
+            if(!file) {
+                res.status(404).json({error: "File not found"});
+            }
+            else if(file.type === "private") {
                 if(user && file.userid === user.userid) {
                     res.json(file);
                 }
