@@ -50,7 +50,7 @@ export const Downloads = () => {
                             setPubview(false);
                         }}>My Files</a></li>
                     </ul>
-                    <p>Currently viewing {pubview ? "public files" : "your files"}</p>
+                    <p>Currently viewing {pubview ? "public files (excluding your public files)" : "your files"}</p>
                 </div> : <></>
             }
             <div className={"container"}>
@@ -77,20 +77,20 @@ export const Downloads = () => {
     )
 }
 
-function GenerateTable(files: any) {
+function GenerateTable(props: any) {
     let session = React.useContext(SessionContext);
-    if (files.files.length == 0) {
+    if (props.files.length == 0) {
         return <tr><td>No files to display</td></tr>;
     }
     else {
-        let table = files.files.map((file: any) => {
-            if (files.search === "" || file.name.toLowerCase().indexOf(files.search.toLowerCase()) > -1) {
-                if (!session.user.loggedin || (files.pubview && file.userid !== session.user.userid) || (!files.pubview && file.userid === session.user.userid)) {
+        let table = props.files.map((file: any) => {
+            if (props.search === "" || file.name.toLowerCase().indexOf(props.search.toLowerCase()) > -1) {
+                if (!session.user.loggedin || (props.pubview && file.userid !== session.user.userid) || (!props.pubview && file.userid === session.user.userid)) {
                     return (<>
                         <tr>
                             <td className="breakname">{file.name}</td>
                             {
-                                files.pubview ? 
+                                props.pubview ? 
                                 (<td className="breakname">{
                                     file.userid ? file.user.username : ""
                                 }</td>) : (<></>)
