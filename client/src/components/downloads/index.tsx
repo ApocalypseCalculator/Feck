@@ -26,7 +26,7 @@ export const Downloads = () => {
                 setLoadtext("Loaded");
             }
         });
-    }, []);
+    }, [session.user.loggedin]);
 
     function updateSearch(event: any) {
         setSearch(event.target.value);
@@ -147,7 +147,12 @@ function GenerateTable(props: any) {
                 }
             }
         });
-        return (<>{table}</>);
+        if (!table) {
+            return <tr><td>No files to display</td></tr>;
+        }
+        else {
+            return (<>{table}</>);
+        }
     }
 }
 
