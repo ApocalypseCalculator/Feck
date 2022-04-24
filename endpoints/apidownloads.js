@@ -81,6 +81,7 @@ module.exports.execute = function (req, res) {
         }).then(data => {
             let filtered = data.map(e => {
                 delete e.deleted;
+                return e;
             })
             res.json(filtered);
         })
