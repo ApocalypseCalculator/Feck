@@ -14,7 +14,6 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res, next) {
     if (req.query.fileid) {
-        //check perms and decided whether to send file or not
         prisma.file.findFirst({
             where: {
                 id: req.query.fileid
@@ -31,8 +30,9 @@ module.exports.execute = function (req, res, next) {
                             data: {
                                 deleted: true
                             }
-                        });
-                        res.json({ message: `Deleted` });
+                        }).then(() => {
+                            res.json({ message: `Deleted` });
+                        }).catch(err => res.status(500).json({ error: `Server error` }));
                     }
                     else {
                         res.status(403).json({ error: `Unauthorized` });
