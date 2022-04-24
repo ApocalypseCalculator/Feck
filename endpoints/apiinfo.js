@@ -11,6 +11,10 @@ module.exports.execute = function (req, res) {
     res.status(200).json({
         name: config.name,
         email: config.email,
-        version: package.version
+        version: package.version,
+        filelimit: {
+            anon: config.filelimit.anon,
+            registered: config.filelimit.registered
+        }
     });
 }
