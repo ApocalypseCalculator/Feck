@@ -1,3 +1,11 @@
+# Prisma
+*.db
+*.db-journal
+prisma/migrations
+
+#Uploads
+uploads
+
 # Logs
 logs
 *.log

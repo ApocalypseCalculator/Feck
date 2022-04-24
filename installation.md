@@ -19,7 +19,7 @@ cd Feck
 
 After that we'll need to install [Node.js](https://nodejs.org/en/), the runtime that will run our server
 ```
-sudo snap install node --classic --channel=12
+sudo snap install node --classic --channel=16
 ```
 We need a create a symlink to a directory that is recognized in PATH, so
 ```
@@ -33,10 +33,27 @@ Add your info to the configuration files by doing
 ```
 nano config.js
 ```
-and replace the data as required
+and replace the data as required.
 
+### Building the client
 
-Now we have all (except https) of our required items installed. 
+Begin by installing `vite`. 
+```
+npm install -g vite
+cd client
+```
+Now build the client
+```
+vite build
+```
+
+### Setting up database
+
+This will create a `data.db` file in the prisma folder.
+```
+npx prisma migrate dev
+```
+
 
 ### Setting up Nginx
 
@@ -150,23 +167,6 @@ sudo systemctl start server
 sudo systemctl status server
 ```
 
-### Running the database cleanup script
-
-The database should be cleaned up every once in a while
-You can do this manually by running
-```
-node csrfclean.js
-```
-or set up a cronjob to automatically run the script after a given amount of time by doing
-```
-sudo crontab -e
-```
-and enter in, replacing yourfilepath with the current directory path
-```
-* 0 * * * node yourfilepath/csrfclean.js
-```
-Save the file and you're good to go.
-
 ### Adding HTTPS (optional)
 
 HTTPS makes going onto your website secure by encrypting all traffic.
@@ -175,8 +175,6 @@ You can get a free certificate from [letsencrypt](https://letsencrypt.org/)
 To install HTTPS, follow instructions from [certbot](https://certbot.eff.org/instructions)
 
 ### Additional Configuration Options
-
-If the SQLite installation fails. You can also use JSON as storage. Simply toggle the setting in config.js (database.sqlite) to false instead of true.
 
 If you wish to have a Discord webhook notification, you can also turn that on by toggling discord.on to true, and putting the webhook link inside the
 webhook's quotes. 

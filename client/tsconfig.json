@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "target": "es2017",
+        "jsx": "react",
+        "module": "commonjs",
+        "strict": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "src"
+    ]
+}

@@ -1,0 +1,36 @@
+#myInput {
+    background-image: url('/site/files/searchicon.png');
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid rgba(221, 221, 221, 0.13);
+    margin-bottom: 12px;
+}
+
+#myTable {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid rgba(221, 221, 221, 0.13);
+    font-size: 18px;
+}
+
+#myTable th,
+#myTable td {
+    text-align: left;
+    padding: 12px;
+}
+
+.breakname {
+    word-break: break-all;
+}
+
+#myTable tr {
+    border-bottom: 1px solid rgba(221, 221, 221, 0.123);
+}
+
+#myTable tr.header,
+#myTable tr:hover {
+    background-color: rgba(221, 221, 221, 0.253);
+}
