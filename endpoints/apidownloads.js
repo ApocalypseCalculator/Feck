@@ -18,7 +18,8 @@ module.exports.execute = function (req, res) {
     if (req.query.fileid) {
         prisma.file.findFirst({
             where: {
-                id: req.query.fileid
+                id: req.query.fileid,
+                deleted: false
             },
             include: {
                 user: {
@@ -33,7 +34,9 @@ module.exports.execute = function (req, res) {
             }
             else if(file.type === "private") {
                 if(user && file.userid === user.userid) {
-                    res.json(file);
+                    let sfile = file;
+                    delete sfile.deleted;
+                    res.json(sfile);
                 }
                 else {
                     res.status(404).json({error: "File not found"});
@@ -76,7 +79,10 @@ module.exports.execute = function (req, res) {
                 date: 'desc'
             }
         }).then(data => {
-            res.json(data);
+            let filtered = data.map(e => {
+                delete e.deleted;
+            })
+            res.json(filtered);
         })
     }
 }
