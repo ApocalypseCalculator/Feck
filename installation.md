@@ -184,7 +184,7 @@ webhook's quotes.
 I hope you liked this guide :3
 
 a few things to note: 
-- be careful about file space, this does not check your server's available disk space, and may cause errors once your disk space fills up
+- be careful about file space, this allows some available disk space and refuses to upload if that is hit (check `config.js`)
 - if you are uploading extremely large files, increase allowed traffic in Nginx config by editing `client_max_body_size XM;` (replace X with the max size in MB), remember to save and restart the service. Remember to also increase upload limits in server `config.js` file. 
 - If you encounter problems, open an issue in this repository
 - Want to contribute? Open a pull request!
