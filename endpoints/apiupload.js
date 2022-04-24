@@ -37,8 +37,8 @@ module.exports.execute = function (req, res) {
                     }
                     catch { }
                     let type = "public";
-                    if (["public", "unlisted", "private"].includes(req.body.type)) {
-                        type = req.body.type;
+                    if (["public", "unlisted", "private"].includes(req.headers.type)) {
+                        type = req.headers.type;
                     }
                     if (Date.now() - value.generated >= 7200000) {
                         res.status(401).json({ error: `Your session has expired` });

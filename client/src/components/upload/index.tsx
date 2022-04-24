@@ -26,6 +26,7 @@ export const Upload = () => {
         axios.default.post('/api/upload', fd, {
             headers: {
                 "csrftoken": csrf,
+                "type": `${fd.get("type")}`,
                 "authorization": session.token
             },
             onUploadProgress: (progresse: ProgressEvent) => {
@@ -62,9 +63,19 @@ export const Upload = () => {
 }
 
 function UploadContainer(props: any) {
+    const session = React.useContext(SessionContext);
     if (props.status === "form") {
         return (<form method={"POST"} encType={"multipart/form-data"} id={"upload"} onSubmit={props.submitUpload}>
+            <label htmlFor={"fileToUpload"}>Choose a file to upload:</label>
             <input className={"form-control-file"} type={"file"} name={"fileToUpload"} id={"fileToUpload"} required={true}></input>
+            <label htmlFor={"type"}>Upload type: </label>
+            <select name={"type"} id={"type"}>
+                <option value={"public"}>Public</option>
+                <option value={"unlisted"}>Unlisted</option>
+                {
+                    session.user.loggedin ? <option value={"private"}>Private</option> : <></>
+                }
+            </select>
             <br></br>
             <input className={"btn btn-info"} type={"submit"} value={"Upload File"} name={"submit"}></input>
         </form>);
