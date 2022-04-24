@@ -143,7 +143,8 @@ function GenerateTable(props: any) {
             }
         }
     });
-    if (!table[0]) {
+    table = table.filter((t:any) => t);
+    if (table.length == 0) {
         return (<tr><td>No files to display</td></tr>);
     }
     else {
