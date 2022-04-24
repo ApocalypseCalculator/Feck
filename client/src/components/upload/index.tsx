@@ -1,11 +1,13 @@
 import * as React from "react";
 import * as axios from "axios";
 import { SessionContext } from "../../util/session";
+import { InfoContext } from "../../util/info";
 
 import "./index.scss";
 
 export const Upload = () => {
     const session = React.useContext(SessionContext);
+    const info = React.useContext(InfoContext);
     let [csrf, setCsrf] = React.useState("");
     let [percentdone, setPercentdone] = React.useState(0);
     let [status, setStatus] = React.useState("form");
@@ -23,28 +25,34 @@ export const Upload = () => {
         e.preventDefault();
         setStatus("uploading");
         let fd = new FormData(e.target as HTMLFormElement);
-        axios.default.post('/api/upload', fd, {
-            headers: {
-                "csrftoken": csrf,
-                "type": `${fd.get("type")}`,
-                "authorization": session.token
-            },
-            onUploadProgress: (progresse: ProgressEvent) => {
-                if (progresse.lengthComputable) {
-                    setPercentdone(Math.ceil(100 * progresse.loaded / progresse.total));
+        let size = (fd.get("fileToUpload") as File).size;
+        if ((session.user.loggedin && size > info.filelimit.registered) || (!session.user.loggedin && size > info.filelimit.anon)) {
+            setStatus("toobig");
+        }
+        else {
+            axios.default.post('/api/upload', fd, {
+                headers: {
+                    "csrftoken": csrf,
+                    "type": `${fd.get("type")}`,
+                    "authorization": session.token
+                },
+                onUploadProgress: (progresse: ProgressEvent) => {
+                    if (progresse.lengthComputable) {
+                        setPercentdone(Math.ceil(100 * progresse.loaded / progresse.total));
+                    }
                 }
-            }
-        }).then((res) => {
-            setResdata(res.data);
-            if (res.data.error) {
-                setStatus("error");
-            }
-            else {
-                setStatus("success");
-            }
-        }).catch(err => {
-            setStatus("failed");
-        });
+            }).then((res) => {
+                setResdata(res.data);
+                if (res.data.error) {
+                    setStatus("error");
+                }
+                else {
+                    setStatus("success");
+                }
+            }).catch(err => {
+                setStatus("failed");
+            });
+        }
     }
 
     return (
@@ -53,6 +61,7 @@ export const Upload = () => {
                 <div className={"container"}>
                     <h1>Feck Files Upload</h1>
                     <p>Choose a file below and upload it.</p>
+                    <p>Anonymous uploaders are limited to {formatSize(info.filelimit.anon)}, registered users can upload up to {formatSize(info.filelimit.anon)}</p>
                 </div>
             </div>
             <div className={"container"} id={"uploaddiv"}>
@@ -64,6 +73,7 @@ export const Upload = () => {
 
 function UploadContainer(props: any) {
     const session = React.useContext(SessionContext);
+    const info = React.useContext(InfoContext);
     if (props.status === "form") {
         return (<form method={"POST"} encType={"multipart/form-data"} id={"upload"} onSubmit={props.submitUpload}>
             <label htmlFor={"fileToUpload"}>Choose a file to upload:</label>
@@ -86,6 +96,9 @@ function UploadContainer(props: any) {
         </div><br></br>
             <div id={"progress-wrp"}><div className={"progress-bar"} style={{ width: `${props.percentdone}%` }}></div><div className={"status"}>{props.percentdone + "%"}</div></div></>)
     }
+    else if (props.status === "toobig") {
+        return (<div className={"alert alert-danger"}><strong>Size limit exceeded</strong>Anonymous uploaders are limited to {formatSize(info.filelimit.anon)}, registered users can upload up to {formatSize(info.filelimit.anon)}</div>);
+    }
     else if (props.status === "failed") {
         return (<div className={"alert alert-danger"}><strong>Oops</strong> upload failed!</div>);
     }
@@ -104,5 +117,19 @@ function UploadContainer(props: any) {
     }
     else {
         return <></>
+    }
+}
+
+function formatSize(number: number): string {
+    if (number >= 1024 * 1024) {
+        let mbSize = number / (1024 * 1024);
+        return `${mbSize.toFixed(1)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
+    }
+    else if (number >= 1024) {
+        let kbSize = number / (1024);
+        return `${kbSize.toFixed(1)}KB`;
+    }
+    else {
+        return `${number}B`;
     }
 }
