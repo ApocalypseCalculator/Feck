@@ -54,6 +54,7 @@ export const _App = () => {
                                             <a className={"dropdown-item"} href={"#"} onClick={(ev) => {
                                                 ev.preventDefault();
                                                 session.updateToken("");
+                                                window.location.reload();
                                             }}>Logout</a>
                                         </div>
                                     </> :
