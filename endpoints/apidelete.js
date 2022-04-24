@@ -13,10 +13,10 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res, next) {
-    if (req.query.fileid) {
+    if (req.body.fileid) {
         prisma.file.findFirst({
             where: {
-                id: req.query.fileid
+                id: req.body.fileid
             }
         }).then(file => {
             if (file) {
