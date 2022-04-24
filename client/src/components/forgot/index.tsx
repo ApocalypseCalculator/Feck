@@ -1,9 +1,15 @@
 import * as React from "react";
 import * as axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SessionContext } from "../../util/session";
 
 export const Forgot = () => {
     const nav = useNavigate();
+    const session = React.useContext(SessionContext);
+
+    if(session.user.loggedin) {
+        nav("/");
+    }
 
     let [csrf, setCsrf] = React.useState("");
     let [username, setUsername] = React.useState("");

@@ -9,6 +9,10 @@ export const Login = () => {
     const nav = useNavigate();
     const session = React.useContext(SessionContext);
 
+    if(session.user.loggedin) {
+        nav("/");
+    }
+
     let [csrf, setCsrf] = React.useState("");
     let [username, setUsername] = React.useState("");
     let [pwd, setPwd] = React.useState("");
