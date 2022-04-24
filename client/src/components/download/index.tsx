@@ -64,6 +64,8 @@ export const Download = () => {
                 let url = window.URL.createObjectURL(blob);
                 setDownloadurl(url);
                 setStatus("success");
+                //@ts-ignore
+                $("#clicklink")[0].click();
             }).catch(err => {
                 console.log(err);
                 setStatus("failed");
