@@ -15,38 +15,65 @@ module.exports.execute = function (req, res) {
         user = jwt.verify(req.headers.authorization, config.secrets.jwt);
     }
     catch { }
-    prisma.file.findMany({
-        where: {
-            AND: [
-                {
-                    deleted: false
-                },
-                {
-                    OR: [
-                        {
-                            type: "public",
-                        },
-                        {
-                            AND: {
-                                userid: user ? user.userid : "-1",
-                            }
-                        }
-                    ]
-                }
-            ],
-        },
-        include: {
-            user: {
-                select: {
-                    username: true
+    if (req.query.fileid) {
+        prisma.file.findFirst({
+            where: {
+                id: req.query.fileid
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true
+                    }
                 }
             }
-        },
-        orderBy: {
-            date: 'desc'
-        }
-    }).then(data => {
-        let raw = JSON.stringify(data);
-        res.send(raw).end();
-    })
+        }).then(file => {
+            if(file.type === "private") {
+                if(user && file.userid === user.userid) {
+                    res.json(file);
+                }
+                else {
+                    res.status(404).json({error: "File not found"});
+                }
+            }
+            else {
+                res.json(file);
+            }
+        })
+    }
+    else {
+        prisma.file.findMany({
+            where: {
+                AND: [
+                    {
+                        deleted: false
+                    },
+                    {
+                        OR: [
+                            {
+                                type: "public",
+                            },
+                            {
+                                AND: {
+                                    userid: user ? user.userid : "-1",
+                                }
+                            }
+                        ]
+                    }
+                ],
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true
+                    }
+                }
+            },
+            orderBy: {
+                date: 'desc'
+            }
+        }).then(data => {
+            res.json(data);
+        })
+    }
 }
