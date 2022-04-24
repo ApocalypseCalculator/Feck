@@ -40,17 +40,20 @@ module.exports.execute = function (req, res) {
                     if (["public", "unlisted", "private"].includes(req.headers.type)) {
                         type = req.headers.type;
                     }
+                    let size = parseInt(req.headers["content-length"]);
                     if (Date.now() - value.generated >= 7200000) {
                         res.status(401).json({ error: `Your session has expired` });
                     }
                     else if (type == "private" && !user) {
                         res.status(401).json({ error: `You must be logged in to upload private files` });
                     }
+                    else if ((user && size > config.filelimit.registered) || (!user && size > config.filelimit.anon)) {
+                        res.status(413).json({ error: `You have exceeded the maximum allowed size for your current session` });
+                    }
                     else {
                         let id = nanoid.nanoid();
                         var busboy = Busboy({ headers: req.headers });
                         let name = "";
-                        let size = parseInt(req.headers["content-length"]);
                         busboy.on('file', function (anme, file, info) {
                             let { filename, encoding, mimeType } = info;
                             if (filename) {
