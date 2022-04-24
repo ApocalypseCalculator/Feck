@@ -83,7 +83,7 @@ server {
    server_name YOUR_DOMAIN_NAME;
    access_log /var/log/nginx/something-access.log;
 
-   client_max_body_size 100M;
+   client_max_body_size 2050M;
    
    location / {
         proxy_pass http://127.0.0.1:8080;
@@ -184,7 +184,7 @@ webhook's quotes.
 I hope you liked this guide :3
 
 a few things to note: 
-- be careful about file space, this does not check your file space, and may cause errors once your disk space fills up
-- if you are uploading > 100MB files, increase allowed traffic in Nginx config by editing `client_max_body_size XM;` (replace X with the max size in MB), remember to save and restart the service. 
+- be careful about file space, this does not check your server's available disk space, and may cause errors once your disk space fills up
+- if you are uploading extremely large files, increase allowed traffic in Nginx config by editing `client_max_body_size XM;` (replace X with the max size in MB), remember to save and restart the service. Remember to also increase upload limits in server `config.js` file. 
 - If you encounter problems, open an issue in this repository
 - Want to contribute? Open a pull request!
