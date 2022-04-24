@@ -2,6 +2,7 @@ import * as React from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 import { SessionProvider, SessionContext } from "../../util/session";
+import { InfoProvider } from "../../util/info";
 
 import { Home } from "../home";
 import { Downloads } from "../downloads";
@@ -96,9 +97,11 @@ export const _App = () => {
 export const App = () => {
     return (
         <BrowserRouter>
-            <SessionProvider>
-                <_App />
-            </SessionProvider>
+            <InfoProvider>
+                <SessionProvider>
+                    <_App />
+                </SessionProvider>
+            </InfoProvider>
         </BrowserRouter>
     );
 }
