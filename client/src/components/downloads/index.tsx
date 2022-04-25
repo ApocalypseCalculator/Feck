@@ -83,7 +83,7 @@ export const Downloads = () => {
                 <table id={"myTable"}>
                     <tr className={"header"}>
                         <th>Name</th>
-                        {(pubview && session.user.loggedin) ? <th>Uploader</th> : <th>Type</th>}
+                        {(pubview) ? <th>Uploader</th> : <th>Type</th>}
                         <th>Size</th>
                         <th>Upload Time</th>
                         <th>Download Links</th>
