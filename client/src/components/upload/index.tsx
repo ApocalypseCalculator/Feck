@@ -12,6 +12,7 @@ export const Upload = () => {
     let [percentdone, setPercentdone] = React.useState(0);
     let [status, setStatus] = React.useState("form");
     let [resdata, setResdata] = React.useState({});
+    let [privatefile, setPrivatefile] = React.useState(false);
 
     React.useEffect(() => {
         axios.default.post('/api/csrfgen').then((res) => {
@@ -25,6 +26,9 @@ export const Upload = () => {
         e.preventDefault();
         setStatus("uploading");
         let fd = new FormData(e.target as HTMLFormElement);
+        if(fd.get("type") === "private") {
+            setPrivatefile(true);
+        }
         axios.default.post('/api/upload', fd, {
             headers: {
                 "csrftoken": csrf,
@@ -64,7 +68,7 @@ export const Upload = () => {
                 </div>
             </div>
             <div className={"container"} id={"uploaddiv"}>
-                <UploadContainer status={status} submitUpload={submitUpload} percentdone={percentdone} resdata={resdata} />
+                <UploadContainer status={status} submitUpload={submitUpload} percentdone={percentdone} resdata={resdata} privatefile={privatefile} />
             </div>
         </div>
     )
@@ -110,7 +114,7 @@ function UploadContainer(props: any) {
                 <strong>Success!</strong> Uploaded your file <b>{props.resdata.filename}</b> successfully.
             </div>
             <div className={"container"}>
-                <p>You can access your uploaded file <a href={`/uploads/?fileid=${props.resdata.fileid}`} target={"_blank"} rel={"noopener noreferrer"}
+                <p>You can access your uploaded file <a href={props.privatefile ? `/download?fileid=${props.resdata.fileid}` : `/uploads/?fileid=${props.resdata.fileid}`} target={"_blank"} rel={"noopener noreferrer"}
                     id={"clicklink"}>here</a></p>
             </div></>);
     }
