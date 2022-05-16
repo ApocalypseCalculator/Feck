@@ -7,7 +7,8 @@ module.exports = {
     },
     filelimit: {
         anon: 209715200, //200mb
-        registered: 2147483648 //2gb
+        registered: 2147483648, //2gb
+        server: 5 * 1024 * 1024 //allows uploading to folder until last 5mb reached
     },
     discord: {
         on: false, //switch this to true to turn it on, false to turn it off

@@ -50,6 +50,11 @@ If you have trouble setting it up, you can DM me on Discord for help at Apocalyp
 
 `email` your email so that site users can contact you
 
+`filelimit`
+- `anon` file upload limit for anonymous users represented in bytes. Default 200MB
+- `registered` file upload limit for registered users represented in bytes. Default 2GB
+- `server` server allowed limit for saving files. The server will guaranteed this field's amount of space is free in the uploads folder. Default 5MB
+
 `ratelimit`
 - `time` ratelimit cooldown in minutes
 - `requests` amount of requests allowed within `time`

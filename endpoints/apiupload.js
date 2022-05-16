@@ -6,6 +6,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const nanoid = require('nanoid');
 const jwt = require("jsonwebtoken");
+const disk = require('diskusage');
 const config = require('../config');
 
 module.exports.name = "/api/upload";
@@ -49,6 +50,9 @@ module.exports.execute = function (req, res) {
                     }
                     else if ((user && size > config.filelimit.registered) || (!user && size > config.filelimit.anon)) {
                         res.status(413).json({ error: `You have exceeded the maximum allowed size for your current session` });
+                    }
+                    else if (disk.checkSync('./uploads').available - size < config.filelimit.server) {
+                        res.status(413).json({ error: "Server out of disk space" });
                     }
                     else {
                         let id = nanoid.nanoid();
