@@ -63,6 +63,8 @@ If you have trouble setting it up, you can DM me on Discord for help at Apocalyp
 - `on` whether to turn on Discord notifications or not (true for on false for off)
 - `webhook` the Discord webhook link (only required if on is set to true)
 
+`workers` number of workers you want to spawn. Usually just 1 or 2 is enough. Must be between 1 and your machine CPU count. 
+
 
 ## Licensing and others
 
