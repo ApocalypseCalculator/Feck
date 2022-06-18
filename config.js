@@ -12,9 +12,10 @@ module.exports = {
     },
     discord: {
         on: false, //switch this to true to turn it on, false to turn it off
-        webhook: 'your webhook link'
+        webhook: 'your webhook link' //create one in Discord in channel settings -> integrations
     },
     secrets: {
-        jwt: "jwt signing secret here"
-    }
+        jwt: "jwt signing secret here" //please use a secure signing secret 
+    },
+    workers: 2 //amount of worker threads
 }
