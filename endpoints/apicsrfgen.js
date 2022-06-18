@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const nanoid = require('nanoid');
+const nanoid = import('nanoid');
 
 module.exports.name = "/api/csrfgen";
 module.exports.method = "POST";
