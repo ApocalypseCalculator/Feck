@@ -30,7 +30,7 @@
     "uuid": "^9.0.0"
   },
   "optionalDependencies": {
-    "axios": "^0.27.1",
+    "axios": "^1.2.1",
     "prisma": "^4.1.1"
   }
 }
