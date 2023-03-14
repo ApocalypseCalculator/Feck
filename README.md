@@ -4,13 +4,9 @@
 [![Github issues](https://img.shields.io/github/issues/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/issues)
 [![GitHub forks](https://img.shields.io/github/forks/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/network)
 [![GitHub stars](https://img.shields.io/github/stars/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/ApocalypseCalculator/Feck/total.svg)](https://github.com/ApocalypseCalculator/Feck/releases)
 [![GitHub license](https://img.shields.io/github/license/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck)
 
 A simple, robust online file drive system created in Node.js 
-
-This repository was forked from my original project with git completely reset to remove some sensitive personal information
-
 
 ## Installation
 
