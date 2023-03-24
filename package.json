@@ -30,6 +30,6 @@
   },
   "optionalDependencies": {
     "axios": "^1.2.1",
-    "prisma": "^4.8.0"
+    "prisma": "^4.11.0"
   }
 }
