@@ -21,11 +21,11 @@ module.exports.sendNotif = (name, id, hostname, ip, size) => {
                         inline: true
                     }, {
                         name: "Access URL",
-                        value: `[Click me](https://${hostname}/uploads/${id}/${encodeURIComponent(name)})`,
+                        value: `[Click me](https://${hostname}/uploads/?fileid=${id})`,
                         inline: true
                     }, {
                         name: "File Size",
-                        value: `${size}`,
+                        value: `${formatSize(parseInt(size))}`,
                         inline: true
                     }, {
                         name: "Uploader IP",
@@ -43,4 +43,18 @@ module.exports.sendNotif = (name, id, hostname, ip, size) => {
             resolve();
         }
     })
+}
+
+function formatSize(number) {
+    if (number >= 1024 * 1024) {
+        let mbSize = number / (1024 * 1024);
+        return `${mbSize.toFixed(1)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "MB";
+    }
+    else if (number >= 1024) {
+        let kbSize = number / (1024);
+        return `${kbSize.toFixed(1)}KB`;
+    }
+    else {
+        return `${number}B`;
+    }
 }
