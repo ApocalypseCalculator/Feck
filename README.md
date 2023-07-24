@@ -66,6 +66,15 @@ If you have trouble setting it up, you can DM me on Discord for help at Apocalyp
 `workers` number of workers you want to spawn. Usually just 1 or 2 is enough. Must be between 1 and your machine CPU count. 
 
 
+## Tus Implementation
+
+This project implements the official Tus 1.0.0 protocol, with a few additional features: 
+
+In particular: 
+
+- For the `Creation` extension, the `Upload-Metadata` header is ignored. The file name is read from the request body's `filename` field instead. 
+
+
 ## Licensing and others
 
 According the Apache 2.0 license included, this code is open source. The only condition is that you may not remove my credits. 
