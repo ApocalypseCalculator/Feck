@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const disk = require('diskusage');
 const config = require('../config');
 
-module.exports.name = "/api/upload";
+module.exports.name = "/api/legacyupload";
 module.exports.method = "POST";
 module.exports.verify = function (req, res) {
     return true;
