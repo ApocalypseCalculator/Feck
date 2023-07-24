@@ -51,7 +51,7 @@ module.exports.execute = function (req, res) {
                             let tusid = nanoid.customAlphabet('1234567890abcdef', 24)(); //24 digit hex
                             prisma.upload.create({
                                 data: {
-                                    id: tusid,
+                                    transportId: tusid,
                                     fileid: file.id,
                                     created: Date.now()
                                 }
