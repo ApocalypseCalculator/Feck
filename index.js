@@ -57,7 +57,7 @@ else if (cluster.isWorker) {
                         m.execute(req, res, next);
                     }
                     catch {
-                        res.sendStatus(500).end();
+                        res.status(500).json({ status: 500, error: 'Internal server error' });
                     }
                 }
                 else {
