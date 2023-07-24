@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const nanoid = import('nanoid');
+const nanoid = require('nanoid');
 
 module.exports.name = "/api/csrfgen";
 module.exports.method = "POST";
@@ -18,5 +18,5 @@ module.exports.execute = function (req, res) {
         }
     }).then(() => {
         res.json({ csrf: csrf });
-    }).catch(() => res.sendStatus(500).end());
+    }).catch(() => res.status(500).json({ status: 500, error: 'Internal server error' }));
 }

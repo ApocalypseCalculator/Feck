@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const nanoid = import('nanoid');
+const nanoid = require('nanoid');
 const bcrypt = require('bcrypt');
 
 module.exports.name = "/api/register";
