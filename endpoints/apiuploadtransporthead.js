@@ -16,9 +16,9 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    res.set('Tus-Version', '1.0.0'); //hardcoding tus version :pepega:
+    res.set('Tus-Resumable', '1.0.0'); //hardcoding tus version :pepega:
     res.set('Tus-Extension', 'creation');
-    try {
+    if (req.headers["tus-resumable"] && req.headers["tus-resumable"] == "1.0.0") {
         prisma.upload.findUnique({
             where: {
                 transportId: req.params.transportId
@@ -56,9 +56,7 @@ module.exports.execute = function (req, res) {
             res.status(500).json({ status: 500, error: "Internal server error" });
         })
     }
-    catch {
-        try {
-            res.status(500).json({ error: "Internal server error" });
-        } catch { }
-    };
+    else {
+        res.status(412).json({ status: 412, error: `Invalid or unsupported tus version` });
+    }
 }
