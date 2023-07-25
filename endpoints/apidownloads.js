@@ -18,8 +18,28 @@ module.exports.execute = function (req, res) {
     if (req.query.fileid) {
         prisma.file.findFirst({
             where: {
-                id: req.query.fileid,
-                deleted: false
+                AND: [
+                    {
+                        id: req.query.fileid
+                    },
+                    {
+                        deleted: false
+                    },
+                    {
+                        OR: [
+                            {
+                                upload: {
+                                    is: null
+                                }
+                            },
+                            {
+                                upload: {
+                                    completed: true
+                                }
+                            }
+                        ]
+                    }
+                ]
             },
             include: {
                 user: {
@@ -29,17 +49,17 @@ module.exports.execute = function (req, res) {
                 }
             }
         }).then(file => {
-            if(!file) {
-                res.status(404).json({error: "File not found"});
+            if (!file) {
+                res.status(404).json({ error: "File not found" });
             }
-            else if(file.type === "private") {
-                if(user && file.userid === user.userid) {
+            else if (file.type === "private") {
+                if (user && file.userid === user.userid) {
                     let sfile = file;
                     delete sfile.deleted;
                     res.json(sfile);
                 }
                 else {
-                    res.status(404).json({error: "File not found"});
+                    res.status(404).json({ error: "File not found" });
                 }
             }
             else {
@@ -62,6 +82,20 @@ module.exports.execute = function (req, res) {
                             {
                                 AND: {
                                     userid: user ? user.userid : "-1",
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        OR: [
+                            {
+                                upload: {
+                                    is: null
+                                }
+                            },
+                            {
+                                upload: {
+                                    completed: true
                                 }
                             }
                         ]
