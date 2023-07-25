@@ -17,7 +17,6 @@ module.exports.verify = function (req, res) {
 
 module.exports.execute = function (req, res) {
     res.set('Tus-Resumable', '1.0.0'); //hardcoding tus version :pepega:
-    res.set('Tus-Extension', 'creation');
     if (req.headers["tus-resumable"] && req.headers["tus-resumable"] == "1.0.0") {
         prisma.upload.findUnique({
             where: {
