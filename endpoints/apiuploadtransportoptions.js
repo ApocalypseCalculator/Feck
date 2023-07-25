@@ -18,7 +18,7 @@ module.exports.verify = function (req, res) {
 module.exports.execute = function (req, res) {
     res.set('Tus-Resumable', '1.0.0'); //hardcoding tus version :pepega:
     res.set('Tus-Version', '1.0.0');
-    res.set('Tus-Extension', 'creation');
+    res.set('Tus-Extension', 'creation,expiration');
     let user = null;
     try {
         user = jwt.verify(req.headers.authorization, config.secrets.jwt);
