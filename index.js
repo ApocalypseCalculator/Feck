@@ -1,5 +1,6 @@
 const cluster = require('cluster');
 const config = require('./config');
+process.env.NODE_ENV = "production";
 
 if (cluster.isPrimary) {
     const cpucount = require('os').cpus().length;
@@ -37,6 +38,7 @@ else if (cluster.isWorker) {
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json({ strict: true }));
     app.enable('trust proxy');
+    app.disable('x-powered-by');
 
     app.use('/site/files', express.static('static'));
 
