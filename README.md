@@ -78,6 +78,6 @@ In particular:
 
 ## Licensing and others
 
-According the Apache 2.0 license included, this code is open source. The only condition is that you may not remove my credits. 
+This code is open source :>
 
 As for the site icon, I got it off a google search. I did not make that icon, and I am currently unable to find who made it.
