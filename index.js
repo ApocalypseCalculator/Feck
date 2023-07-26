@@ -4,7 +4,6 @@ process.env.NODE_ENV = "production";
 
 if (cluster.isPrimary) {
     const cpucount = require('os').cpus().length;
-    const tasks = require('./tasks');
 
     for (let i = 0; i < Math.min(cpucount, Math.max(config.workers, 1)); i++) {
         let worker = cluster.fork();
@@ -15,9 +14,6 @@ if (cluster.isPrimary) {
             console.log(`Worker: ${worker.process.pid} (#${i}) has exited`);
         })
     }
-    setInterval(() => {
-        tasks.cleanCSRF();
-    }, 1 * 60 * 60 * 1000) //1 hour
 }
 else if (cluster.isWorker) {
     const express = require("express");
