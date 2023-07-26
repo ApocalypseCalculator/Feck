@@ -35,6 +35,9 @@ module.exports.execute = function (req, res) {
                 if (upload.completed) {
                     res.status(410).json({ status: 410, error: 'Transport unavailable' });
                 }
+                else if (Date.now() - upload.created > 7 * 86400000) {
+                    res.status(410).json({ status: 410, error: 'Transport expired' });
+                }
                 else if (upload.file.userid && !user) {
                     res.status(401).json({ status: 401, error: 'Authorization required' });
                 }
@@ -45,6 +48,7 @@ module.exports.execute = function (req, res) {
                     res.set('Cache-Control', 'no-store');
                     res.set('Upload-Offset', upload.offset);
                     res.set('Upload-Length', upload.file.size);
+                    res.set('Upload-Expires', new Date(Date.now() + (7 * 86400000 /* 1 day */)).toUTCString());
                     res.send();
                 }
             }
