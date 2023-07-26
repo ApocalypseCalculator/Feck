@@ -38,7 +38,3 @@ model Upload {
   created     Int //time of creation
 }
 
-model CSRF {
-  token     String @id
-  generated Int
-}
