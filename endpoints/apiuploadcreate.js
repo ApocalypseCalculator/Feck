@@ -56,7 +56,9 @@ module.exports.execute = function (req, res) {
                             }
                         }).then(() => {
                             res.set('Upload-Expires', new Date(Date.now() + (7 * 86400000 /* 1 day */)).toUTCString());
-                            res.status(201).set('Location', `/api/upload/transport/${tusid}`).json({ status: 201, message: 'Successfully created upload endpoint', transportId: tusid });
+                            res.status(201).set('Location', `/api/upload/transport/${tusid}`).json(
+                                { status: 201, message: 'Successfully created upload endpoint', transportId: tusid, fileid: file.id }
+                            );
                         }).catch((err) => {
                             console.log(err);
                         });
