@@ -64,7 +64,9 @@ module.exports.execute = function (req, res) {
                     else {
                         let filepath = path.join(__dirname, `../uploads/${upload.fileid}/` + upload.file.name);
                         if (upload.offset == 0) {
-                            fs.mkdirSync(`./uploads/${upload.fileid}`);
+                            if (!fs.existsSync(`./uploads/${upload.fileid}`)) {
+                                fs.mkdirSync(`./uploads/${upload.fileid}`);
+                            }
                             fs.openSync(filepath, 'w');
                         }
                         req.pipe(fs.createWriteStream(filepath, { flags: 'a' }));
