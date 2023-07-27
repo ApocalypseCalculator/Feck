@@ -72,7 +72,7 @@ This project implements the official Tus 1.0.0 protocol, with a few additional f
 
 In particular: 
 
-- For the `Creation` extension, the `Upload-Metadata` header is ignored. The file name is read from the request body's `filename` field instead. 
+- For the `Creation` extension, the `Upload-Metadata` header is ignored. Instead a custom `Base64-Meta` header is required. 
 - For uploads by logged in users, a valid `Authorization` header is required otherwise a 403 will be returned.
 
 
