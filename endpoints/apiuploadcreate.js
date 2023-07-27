@@ -35,11 +35,12 @@ module.exports.execute = function (req, res) {
             else {
                 if ((!user && ["public", "unlisted"].includes(req.body.type)) || (user && ["public", "unlisted", "private"].includes(req.body.type))) {
                     let id = nanoid.nanoid();
+                    let filename = (req.body.filename ?? "unknown").replaceAll(/\s+/g, '-');
                     prisma.file.create({
                         data: {
                             id: id,
                             //name can be a max of 100 chars, name read from filename body and NOT metadata header
-                            name: (req.body.filename ?? "unknown").slice(0, 100),
+                            name: /^[\w\.\-]{1,100}$/.test(filename) ? filename : "unknown",
                             date: Date.now(),
                             size: size,
                             type: req.body.type, //public, private, or unlisted
