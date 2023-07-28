@@ -112,7 +112,10 @@ function UploadContainer(props: any) {
             });
             setPercentdone(Math.round(100 * record.bytesUploaded / record.bytesTotal));
         });
-        return () => uppy.close({ reason: "unmount" });
+        return () => {
+            uppy.removeFile(uppy.getFiles()[0].id);
+            uppy.close({ reason: "unmount" });
+        };
     }, [uppy]);
     if (status === "form") {
         return (
