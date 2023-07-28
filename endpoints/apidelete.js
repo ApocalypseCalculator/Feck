@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const contentdisp = require('content-disposition');
 const config = require('../config');
 const fs = require('fs');
 const path = require('path');
@@ -32,6 +31,10 @@ module.exports.execute = function (req, res, next) {
                             }
                         }).then(() => {
                             res.json({ message: `Deleted` });
+                            let filepath = path.join(__dirname, `../uploads/${file.id}/` + file.name);
+                            if (!fs.existsSync(filepath)) {
+                                fs.rm(filepath);
+                            }
                         }).catch(err => res.status(500).json({ error: `Server error` }));
                     }
                     else {

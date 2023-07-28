@@ -11,60 +11,39 @@ module.exports.verify = function (req, res) {
 }
 
 module.exports.execute = function (req, res) {
-    if (req.headers.csrftoken) {
-        prisma.cSRF.findUnique({
+    if (req.body.username && req.body.password) {
+        prisma.user.findFirst({
             where: {
-                token: req.headers.csrftoken
+                username: req.body.username
             }
-        }).then(value => {
-            if (!value) {
-                res.status(401).json({ error: `Invalid CSRF token` });
+        }).then(user => {
+            if (!user) {
+                res.status(401).json({ error: "Incorrect password or username" });
             }
             else {
-                prisma.cSRF.delete({
-                    where: {
-                        token: req.headers.csrftoken
+                bcrypt.compare(req.body.password, user.password, function (err, result) {
+                    if (err) {
+                        res.status(500).json({ error: `Server error` })
                     }
-                }).catch(() => { });
-                if (req.body.username && req.body.password) {
-                    prisma.user.findFirst({
-                        where: {
-                            username: req.body.username
-                        }
-                    }).then(user => {
-                        if (!user) {
+                    else {
+                        if (!result) {
                             res.status(401).json({ error: "Incorrect password or username" });
                         }
                         else {
-                            bcrypt.compare(req.body.password, user.password, function (err, result) {
-                                if (err) {
-                                    res.status(500).json({ error: `Server error` })
-                                }
-                                else {
-                                    if (!result) {
-                                        res.status(401).json({ error: "Incorrect password or username" });
-                                    }
-                                    else {
-                                        let token = jwt.sign({
-                                            username: user.username,
-                                            userid: user.id,
-                                            registertime: user.registertime
-                                        }, config.secrets.jwt);
-                                        res.json({ token: token });
-                                    }
-                                }
-                            });
+                            let token = jwt.sign({
+                                username: user.username,
+                                userid: user.id,
+                                registertime: user.registertime
+                            }, config.secrets.jwt);
+                            res.json({ token: token });
                         }
-                    }).catch(err => res.status(500).json({ error: `Server error` }));
-
-                }
-                else {
-                    res.status(400).json({ error: `Invalid form` });
-                }
+                    }
+                });
             }
-        })
+        }).catch(err => res.status(500).json({ error: `Server error` }));
+
     }
     else {
-        res.status(400).json({ error: `Error occurred, try reloading` });
+        res.status(400).json({ error: `Invalid form` });
     }
 }

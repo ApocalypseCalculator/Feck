@@ -11,25 +11,12 @@ export const Register = () => {
         nav("/");
     }
 
-    let [csrf, setCsrf] = React.useState("");
     let [username, setUsername] = React.useState("");
     let [pwd1, setPwd1] = React.useState("");
     let [pwd2, setPwd2] = React.useState("");
     let [registering, setRegistering] = React.useState(false);
     let [err, setErr] = React.useState("");
     let [rec, setRec] = React.useState("");
-
-    React.useEffect(() => {
-        getCsrf();
-    }, []);
-
-    function getCsrf() {
-        axios.default.post('/api/csrfgen').then((res) => {
-            if (res.data.csrf) {
-                setCsrf(res.data.csrf);
-            }
-        });
-    }
 
     function register(ev: React.SyntheticEvent) {
         ev.preventDefault();
@@ -50,22 +37,16 @@ export const Register = () => {
             axios.default.post('/api/register', {
                 username: username,
                 password: pwd1
-            }, {
-                headers: {
-                    "csrftoken": csrf
-                }
             }).then(res => {
                 if (res.data.recovery) {
                     setRec(res.data.recovery);
                 }
                 else {
                     setErr(res.data.error);
-                    getCsrf();
                 }
                 setRegistering(false);
             }).catch(err => {
                 setErr(err.response.data.error);
-                getCsrf();
                 setRegistering(false);
             });
         }

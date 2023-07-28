@@ -1,6 +1,8 @@
 import * as React from 'react';
 import jwt_decode from "jwt-decode";
 
+import { test } from './speedtest';
+
 export interface User {
     loggedin: boolean,
     username: string,
@@ -11,7 +13,8 @@ export interface User {
 export interface Session {
     user: User,
     token: string,
-    updateToken: (token: string) => void
+    updateToken: (token: string) => void,
+    ping: number
 }
 
 export const SessionContext = React.createContext<Session>({
@@ -22,7 +25,8 @@ export const SessionContext = React.createContext<Session>({
         registertime: 0
     },
     token: "",
-    updateToken: (token: string) => { }
+    updateToken: (token: string) => { },
+    ping: -1
 });
 
 export const SessionProvider = (props: { children: React.ReactNode }) => {
@@ -33,6 +37,7 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         userid: "",
         registertime: 0
     });
+    let [ping, setPing] = React.useState(-1);
     function updateToken(token: string) {
         setToken(token);
         localStorage.setItem("token", token);
@@ -59,9 +64,12 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         if (storagetoken) {
             updateToken(storagetoken);
         }
+        test().then(val => {
+            setPing(val);
+        });
     }, []);
     return (
-        <SessionContext.Provider value={{ user, token, updateToken }}>
+        <SessionContext.Provider value={{ user, token, updateToken, ping }}>
             {props.children}
         </SessionContext.Provider>
     )
