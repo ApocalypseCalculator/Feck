@@ -52,7 +52,27 @@ function UploadContainer(props: any) {
             .use(Tus,
                 {
                     endpoint: "/api/upload/create",
-                    chunkSize: 10 * 1024 * 1024,
+                    chunkSize: (function getChunkSize() {
+                        // this a very :monke: method but whtv
+                        if (session.ping <= 0) {
+                            return 10 * 1024 * 1024
+                        }
+                        else if (session.ping < 30) {
+                            return 200 * 1024 * 1024
+                        }
+                        else if (session.ping < 60) {
+                            return 100 * 1024 * 1024
+                        }
+                        else if (session.ping < 100) {
+                            return 50 * 1024 * 1024
+                        }
+                        else if (session.ping < 250) {
+                            return 10 * 1024 * 1024
+                        }
+                        else {
+                            return 5 * 1024 * 1024
+                        }
+                    })(),
                     retryDelays: [0, 3000, 5000, 10000, 20000],
                     // @ts-ignore
                     onBeforeRequest: function (req) {
@@ -66,9 +86,9 @@ function UploadContainer(props: any) {
                             })
                         }
                         setFileid((oldfileid) => {
-                            if(req.getMethod() === "PATCH" && oldfileid === "") {
+                            if (req.getMethod() === "PATCH" && oldfileid === "") {
                                 axios.default.get(req.getURL()).then((res) => {
-                                    if(res.data.fileid) {
+                                    if (res.data.fileid) {
                                         setFileid(res.data.fileid);
                                     }
                                 });
@@ -113,7 +133,7 @@ function UploadContainer(props: any) {
             setPercentdone(Math.round(100 * record.bytesUploaded / record.bytesTotal));
         });
         return () => {
-            if(uppy.getFiles().length == 1) {
+            if (uppy.getFiles().length == 1) {
                 uppy.removeFile(uppy.getFiles()[0].id);
             }
             uppy.close({ reason: "unmount" });
