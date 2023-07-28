@@ -17,7 +17,6 @@ if (cluster.isPrimary) {
 }
 else if (cluster.isWorker) {
     const express = require("express");
-    const cookieparser = require('cookie-parser');
     const rateLimit = require("express-rate-limit");
     const fs = require('fs');
     const path = require('path');
@@ -30,7 +29,6 @@ else if (cluster.isWorker) {
     });
 
     app.use(limiter);
-    app.use(cookieparser());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json({ strict: true }));
     app.enable('trust proxy');
