@@ -37,6 +37,10 @@ module.exports.execute = function (req, res) {
                 res.status(403).json({ status: 403, error: 'Access not permitted' });
             }
             else {
+                res.set('Cache-Control', 'no-store');
+                res.set('Upload-Offset', upload.offset);
+                res.set('Upload-Length', upload.file.size);
+                res.set('Upload-Expires', new Date(Date.now() + (7 * 86400000 /* 1 day */)).toUTCString());
                 res.json({
                     transportid: upload.transportId,
                     fileid: upload.fileid,
