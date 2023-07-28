@@ -100,7 +100,7 @@ function UploadContainer(props: any) {
                     return "uploading"
                 } else return oldstatus
             });
-            setPercentdone(Math.round(100 * record.bytesUploaded/record.bytesTotal));
+            setPercentdone(Math.round(100 * record.bytesUploaded / record.bytesTotal));
         });
         return () => uppy.close({ reason: "unmount" });
     }, [uppy]);
@@ -135,16 +135,29 @@ function UploadContainer(props: any) {
         );
     }
     else if (status === "uploading") {
-        return (<><div className={"alert alert-warning"}>
-            <strong>Uploading...</strong> please wait...
-        </div><br></br>
-            <div id={"progress-wrp"}><div className={"progress-bar"} style={{ width: `${percentdone}%` }}></div><div className={"status"}>{percentdone + "%"}</div></div></>)
+        return (<>
+            <div className={"alert alert-warning"}>
+                <strong>Uploading...</strong> please wait...
+            </div><br></br>
+            <div id={"progress-wrp"}>
+                <div className={"progress-bar"} style={{ width: `${percentdone}%` }}>
+                </div>
+                <div className={"status"}>{percentdone + "%"}</div>
+            </div>
+            <button type="button" className="btn btn-danger" onClick={() => {
+                uppy.removeFile(uppy.getFiles()[0].id);
+                setStatus("cancelled");
+            }}>Cancel</button>
+        </>)
     }
     else if (status === "toobig") {
         return (<div className={"alert alert-danger"}><strong>Size limit exceeded</strong> Anonymous uploaders are limited to {formatSize(info.filelimit.anon)}, registered users can upload up to {formatSize(info.filelimit.registered)}</div>);
     }
     else if (status === "failed") {
         return (<div className={"alert alert-danger"}><strong>Oops</strong> upload failed!</div>);
+    }
+    else if (status === "cancelled") {
+        return (<div className={"alert alert-danger"}><strong>Cancelled</strong> The file upload was aborted</div>);
     }
     else if (status === "success") {
         return (<>
