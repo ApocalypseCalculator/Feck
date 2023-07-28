@@ -5,10 +5,16 @@ import { InfoContext } from "../../util/info";
 
 import Uppy from '@uppy/core'
 import Tus from "@uppy/tus";
+import Webcam from '@uppy/webcam';
+import Audio from '@uppy/audio';
+import ScreenCapture from '@uppy/screen-capture';
 import { Dashboard } from '@uppy/react'
 
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
+import '@uppy/webcam/dist/style.min.css'
+import '@uppy/audio/dist/style.min.css'
+import '@uppy/screen-capture/dist/style.min.css'
 
 import "./index.scss";
 
@@ -102,7 +108,7 @@ function UploadContainer(props: any) {
                             setFileid(resobj.fileid);
                         }
                     }
-                });
+                }).use(Webcam).use(Audio).use(ScreenCapture);
     }, []);
     React.useEffect(() => {
         uppy.on('file-added', (file) => {
@@ -164,7 +170,7 @@ function UploadContainer(props: any) {
                             <br></br>
                             <input className={"btn btn-info"} type={"submit"} value={"Choose File to Upload"} name={"submit"}></input>
                         </form> :
-                        <Dashboard uppy={uppy} proudlyDisplayPoweredByUppy={false} />
+                        <Dashboard uppy={uppy} plugins={['Webcam', 'Audio', 'ScreenCapture']} proudlyDisplayPoweredByUppy={false} />
                 }
             </>
         );
