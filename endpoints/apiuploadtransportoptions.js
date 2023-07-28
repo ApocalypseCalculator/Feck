@@ -1,12 +1,4 @@
-const path = require('path');
-const fs = require('fs');
-const Busboy = require('busboy');
-const notif = require('../notif');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const nanoid = require('nanoid');
 const jwt = require("jsonwebtoken");
-const disk = require('diskusage');
 const config = require('../config');
 
 module.exports.name = "/api/upload/transport/:transportId";
