@@ -1,15 +1,11 @@
 import * as axios from "axios";
 
-export const test = () => {
+export const test = async () => {
     let timestamp = Date.now();
-    axios.default.post('/api/ping', 'a'.repeat(256), {
-        onUploadProgress: (e) => {
-            console.log(e);
-        },
+    await axios.default.post('/api/ping', 'a'.repeat(256), {
         headers: {
             "Content-Type": 'text/plain'
         }
-    }).then((res) => {
-        return Date.now() - timestamp;
-    })
+    });
+    return Date.now() - timestamp;
 }
