@@ -15,16 +15,19 @@ module.exports.verify = function (req, res) {
 module.exports.execute = function (req, res, next) {
     if (req.query.fileid) {
         //check perms and decided whether to send file or not
-        prisma.file.findFirst({
+        prisma.file.findUnique({
             where: {
                 id: req.query.fileid
+            },
+            include: {
+                upload: true
             }
         }).then(file => {
-            if (file) {
-                if(file.type == "private" && !file.deleted) {
+            if (file && (!file.upload || file.upload.completed) && !file.deleted) {
+                if (file.type == "private") {
                     try {
                         let user = jwt.verify(req.headers.authorization, config.secrets.jwt);
-                        if(file.userid === user.userid) {
+                        if (file.userid === user.userid) {
                             sendFile(res, next, file);
                         }
                         else {

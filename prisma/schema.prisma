@@ -26,9 +26,15 @@ model File {
   deleted Boolean @default(false)
   user    User?   @relation(fields: [userid], references: [id])
   userid  String?
+  upload  Upload?
 }
 
-model CSRF {
-  token     String @id
-  generated Int
+model Upload {
+  transportId String  @id //this is a temp ID assigned for uploading ONLY
+  file        File    @relation(fields: [fileid], references: [id])
+  fileid      String  @unique
+  offset      Int     @default(0)
+  completed   Boolean @default(false)
+  created     Int //time of creation
 }
+

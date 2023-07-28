@@ -1,9 +1,9 @@
 const cluster = require('cluster');
 const config = require('./config');
+process.env.NODE_ENV = "production";
 
 if (cluster.isPrimary) {
     const cpucount = require('os').cpus().length;
-    const tasks = require('./tasks');
 
     for (let i = 0; i < Math.min(cpucount, Math.max(config.workers, 1)); i++) {
         let worker = cluster.fork();
@@ -14,13 +14,9 @@ if (cluster.isPrimary) {
             console.log(`Worker: ${worker.process.pid} (#${i}) has exited`);
         })
     }
-    setInterval(() => {
-        tasks.cleanCSRF();
-    }, 1 * 60 * 60 * 1000) //1 hour
 }
 else if (cluster.isWorker) {
     const express = require("express");
-    const cookieparser = require('cookie-parser');
     const rateLimit = require("express-rate-limit");
     const fs = require('fs');
     const path = require('path');
@@ -33,10 +29,10 @@ else if (cluster.isWorker) {
     });
 
     app.use(limiter);
-    app.use(cookieparser());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json({ strict: true }));
     app.enable('trust proxy');
+    app.disable('x-powered-by');
 
     app.use('/site/files', express.static('static'));
 
@@ -57,7 +53,7 @@ else if (cluster.isWorker) {
                         m.execute(req, res, next);
                     }
                     catch {
-                        res.sendStatus(500).end();
+                        res.status(500).json({ status: 500, error: 'Internal server error' });
                     }
                 }
                 else {

@@ -13,24 +13,14 @@ export const Login = () => {
         nav("/");
     }
 
-    let [csrf, setCsrf] = React.useState("");
     let [username, setUsername] = React.useState("");
     let [pwd, setPwd] = React.useState("");
     let [logging, setLogging] = React.useState(false);
     let [err, setErr] = React.useState("");
 
-    function getCsrf() {
-        axios.default.post('/api/csrfgen').then((res) => {
-            if (res.data.csrf) {
-                setCsrf(res.data.csrf);
-            }
-        });
-    }
-
     React.useEffect(() => {
         document.body.style.backgroundColor = "#007bff";
         document.body.style.background = "linear-gradient(to right, #0062E6, #33AEFF)";
-        getCsrf();
         return () => {
             document.body.style.backgroundColor = "";
             document.body.style.background = "";
@@ -43,10 +33,6 @@ export const Login = () => {
         axios.default.post('/api/login', {
             username: username,
             password: pwd
-        }, {
-            headers: {
-                "csrftoken": csrf
-            }
         }).then((res) => {
             if (res.data.token) {
                 session.updateToken(res.data.token);
@@ -55,12 +41,10 @@ export const Login = () => {
             else {
                 setErr(res.data.error);
                 setLogging(false);
-                getCsrf();
             }
         }).catch(err => {
             setErr(err.response.data.error);
             setLogging(false);
-            getCsrf();
         });
     }
 
