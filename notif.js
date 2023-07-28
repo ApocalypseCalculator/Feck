@@ -1,7 +1,7 @@
 const axios = require('axios').default;
 const config = require('./config');
 
-module.exports.sendNotif = (name, id, hostname, ip, size) => {
+module.exports.sendNotif = (name, id, hostname, ip, size, private) => {
     return new Promise((resolve, reject) => {
         if (config.discord.on) {
             axios.post(`${config.discord.webhook}`, {
@@ -21,7 +21,7 @@ module.exports.sendNotif = (name, id, hostname, ip, size) => {
                         inline: true
                     }, {
                         name: "Access URL",
-                        value: `[Click me](https://${hostname}/uploads/?fileid=${id})`,
+                        value: `[Click me](https://${hostname}/${private ? 'download' : 'uploads/'}?fileid=${id})`,
                         inline: true
                     }, {
                         name: "File Size",
