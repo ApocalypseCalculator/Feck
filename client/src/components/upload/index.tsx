@@ -65,6 +65,16 @@ function UploadContainer(props: any) {
                                 return oldformdata;
                             })
                         }
+                        setFileid((oldfileid) => {
+                            if(req.getMethod() === "PATCH" && oldfileid === "") {
+                                axios.default.get(req.getURL()).then((res) => {
+                                    if(res.data.fileid) {
+                                        setFileid(res.data.fileid);
+                                    }
+                                });
+                            }
+                            return oldfileid;
+                        })
                     },
                     onAfterResponse: function (req, res) {
                         if (req.getMethod() === "POST") {
@@ -87,7 +97,7 @@ function UploadContainer(props: any) {
             setStatus("success");
         });
         uppy.on('upload-error', (file) => {
-            if (file?.size! > (session.user.loggedin ? info.filelimit.registered : info.filelimit.anon)) {
+            if (!isNaN(file?.size!) && file?.size! > (session.user.loggedin ? info.filelimit.registered : info.filelimit.anon)) {
                 setStatus("toobig");
             }
             else {
