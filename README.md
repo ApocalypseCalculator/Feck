@@ -1,10 +1,6 @@
 # Feck Files
 
 ![CodeQL](https://github.com/ApocalypseCalculator/Feck/workflows/CodeQL/badge.svg)
-[![Github issues](https://img.shields.io/github/issues/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/issues)
-[![GitHub forks](https://img.shields.io/github/forks/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/network)
-[![GitHub stars](https://img.shields.io/github/stars/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/ApocalypseCalculator/Feck/total.svg)](https://github.com/ApocalypseCalculator/Feck/releases)
 [![GitHub license](https://img.shields.io/github/license/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck)
 
 A simple, robust online file drive system created in Node.js 
@@ -74,6 +70,7 @@ In particular:
 
 - For the `Creation` extension, the `Upload-Metadata` header is ignored. Instead a custom `Base64-Meta` header is required. 
 - For uploads by logged in users, a valid `Authorization` header is required otherwise a 403 will be returned.
+- The upload endpoint also allows `GET` requests to fetch additional information like the `fileid`.
 
 
 ## Licensing and others
