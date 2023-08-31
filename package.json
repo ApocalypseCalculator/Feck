@@ -23,7 +23,7 @@
     "content-disposition": "^0.5.4",
     "express": "^4.18.2",
     "express-rate-limit": "^6.7.0",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
     "nanoid": "3.3.5"
   },
   "optionalDependencies": {
