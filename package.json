@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/ApocalypseCalculator/Feck#readme",
   "dependencies": {
-    "@prisma/client": "3.15.2",
+    "@prisma/client": "5.3.0",
     "bcrypt": "^5.1.0",
     "content-disposition": "^0.5.4",
     "express": "^4.18.2",
