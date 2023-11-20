@@ -1,4 +1,16 @@
+let secrets;
+
+try {
+    secrets = require('./secrets.json');
+}
+catch {
+    console.log('Missing secrets file, did you run setup.js?'); 
+    process.exit();
+}
+
 module.exports = {
+    mode: 'master', // either master or worker
+    // THIS SECTION OF CONFIG IS REQUIRED IF MODE IS MASTER
     name: "unknown", //your name to be referred by
     email: "someemail@example.com", //your email so site users can contact you
     ratelimit: {
@@ -14,8 +26,11 @@ module.exports = {
         on: false, //switch this to true to turn it on, false to turn it off
         webhook: 'your webhook link' //create one in Discord in channel settings -> integrations
     },
-    secrets: {
-        jwt: "jwt signing secret here" //please use a secure signing secret 
+    // THIS IS REQUIRED BY BOTH MODES
+    secrets: secrets,
+    // THIS IS REQUIRED IF MODE IS WORKER
+    worker: {
+        master: 'feckfiles', // hostname of the master node
+        capacity: 10 * 1024 * 1024 * 1024 //10 GB
     },
-    workers: 2 //amount of worker threads
 }
