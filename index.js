@@ -44,16 +44,23 @@ fs.readdirSync("./endpoints/").forEach(function (file) {
                 res.status(403).json({ status: 403, error: 'Access denied' });
             }
         });
-        //console.log(`Loaded endpoint: ${m.method} ${file} (${m.name})`);
+        console.log(`Loaded endpoint: ${m.method} ${file} (${m.name})`);
     }
 });
 
-app.use(express.static('./client/dist', { extensions: ["html"] }));
+if (config.mode == "master") {
+    app.use(express.static('./client/dist', { extensions: ["html"] }));
 
-app.use('/', function (req, res) {
-    res.sendFile(path.join(__dirname + `/client/dist/index.html`));
-})
+    app.use('/', function (req, res) {
+        res.sendFile(path.join(__dirname + `/client/dist/index.html`));
+    });
+}
+else { //worker
+    app.use('/', function(req, res) {
+        res.status(403).json({status: 403, error: 'Access denied'}); 
+    });
+}
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+    console.log(`Server (${config.mode} ${config.secrets.nodeid}) listening on port ${PORT}`);
 });
