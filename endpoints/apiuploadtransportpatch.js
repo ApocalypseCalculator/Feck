@@ -85,7 +85,7 @@ module.exports.execute = function (req, res) {
                                 res.set('Upload-Expires', new Date(Date.now() + (7 * 86400000 /* 1 day */)).toUTCString());
                                 res.status(204).send();
                                 if (contentlength + upload.offset == upload.file.size) {
-                                    notif.sendNotif(upload.file.name, req.hostname, req.ip, upload.file.size, upload.file.type === "private").catch();
+                                    notif.sendNotif(upload.file.name, upload.fileid, req.hostname, req.ip, upload.file.size, upload.file.type === "private").catch();
                                 }
                             })
                         });
