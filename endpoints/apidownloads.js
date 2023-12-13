@@ -94,8 +94,10 @@ module.exports.execute = function (req, res) {
                                 }
                             },
                             {
-                                upload: {
-                                    completed: true
+                                AND: {
+                                    upload: {
+                                        completed: true
+                                    }
                                 }
                             }
                         ]
