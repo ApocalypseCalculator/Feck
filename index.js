@@ -1,5 +1,6 @@
 const cluster = require('cluster');
 const config = require('./config');
+const jwt = require('jsonwebtoken');
 process.env.NODE_ENV = "production";
 
 if (cluster.isPrimary) {
@@ -35,6 +36,18 @@ else if (cluster.isWorker) {
     app.disable('x-powered-by');
 
     app.use('/site/files', express.static('static'));
+
+    app.use(async (req, res, next) => {
+        if (req.headers.authorization) {
+            try {
+                req.user = jwt.verify(req.headers.authorization, config.secrets.jwt);
+            }
+            catch (err) {
+                // unsucessful auth
+            }
+        }
+        next();
+    });
 
     var endpoints = {};
     fs.readdirSync("./endpoints/").forEach(function (file) {
