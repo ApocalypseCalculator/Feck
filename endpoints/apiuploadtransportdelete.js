@@ -4,6 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const config = require('../config');
+const { getFilePath } = require('../lib/path');
 
 module.exports.name = "/api/upload/transport/:transportId";
 module.exports.method = "DELETE";
@@ -41,7 +42,7 @@ module.exports.execute = function (req, res) {
                     res.status(403).json({ status: 403, error: 'Access not permitted' });
                 }
                 else {
-                    let filepath = path.join(__dirname, `../uploads/${upload.fileid}/` + upload.file.name);
+                    let filepath = getFilePath(upload.fileid, upload.file.name);
                     prisma.upload.update({
                         where: {
                             transportId: req.params.transportId

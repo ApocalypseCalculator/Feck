@@ -1,10 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const notif = require('../notif');
+const notif = require('../lib/notif');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const config = require('../config');
+const { getFilePath, getFileDir } = require('../lib/path');
 
 module.exports.name = "/api/upload/transport/:transportId";
 module.exports.method = "PATCH";
@@ -59,10 +60,11 @@ module.exports.execute = function (req, res) {
                         res.status(400).json({ status: 400, error: 'Invalid content length' });
                     }
                     else {
-                        let filepath = path.join(__dirname, `../uploads/${upload.fileid}/` + upload.file.name);
+                        let filepath = getFilePath(upload.fileid, upload.file.name);
                         if (upload.offset == 0) {
-                            if (!fs.existsSync(`./uploads/${upload.fileid}`)) {
-                                fs.mkdirSync(`./uploads/${upload.fileid}`);
+                            let filedir = getFileDir(upload.fileid);
+                            if (!fs.existsSync(filedir)) {
+                                fs.mkdirSync(filedir, { recursive: true });
                             }
                             fs.openSync(filepath, 'w');
                         }

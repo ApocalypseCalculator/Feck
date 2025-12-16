@@ -4,6 +4,7 @@ const config = require('../config');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { getFilePath } = require('../lib/path');
 
 module.exports.name = "/api/delete";
 module.exports.method = "POST";
@@ -31,8 +32,8 @@ module.exports.execute = function (req, res, next) {
                             }
                         }).then(() => {
                             res.json({ message: `Deleted` });
-                            let filepath = path.join(__dirname, `../uploads/${file.id}/` + file.name);
-                            if (!fs.existsSync(filepath)) {
+                            let filepath = getFilePath(file.id, file.name);
+                            if (fs.existsSync(filepath)) {
                                 fs.rm(filepath);
                             }
                         }).catch(err => res.status(500).json({ error: `Server error` }));

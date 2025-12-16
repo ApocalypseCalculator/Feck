@@ -5,6 +5,7 @@ const config = require('../config');
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { getFilePath } = require('../lib/path');
 
 module.exports.name = "/uploads/*";
 module.exports.method = "GET";
@@ -53,7 +54,7 @@ module.exports.execute = function (req, res, next) {
 }
 
 function sendFile(res, next, file) {
-    let filepath = path.join(__dirname, `../uploads/${file.id}/${file.name}`);
+    let filepath = getFilePath(file.id, file.name);
     if (fs.existsSync(filepath)) {
         res.setHeader('Content-Disposition', contentdisp(filepath));
         res.sendFile(filepath);
