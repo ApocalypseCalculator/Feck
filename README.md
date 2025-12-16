@@ -1,6 +1,5 @@
 # Feck Files
 
-![CodeQL](https://github.com/ApocalypseCalculator/Feck/workflows/CodeQL/badge.svg)
 [![GitHub license](https://img.shields.io/github/license/ApocalypseCalculator/Feck.svg)](https://github.com/ApocalypseCalculator/Feck)
 
 A simple, robust online file drive system created in Node.js 
