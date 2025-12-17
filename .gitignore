@@ -2,6 +2,7 @@
 *.db
 *.db-journal
 prisma/migrations
+prisma/generated
 
 #Uploads
 uploads
