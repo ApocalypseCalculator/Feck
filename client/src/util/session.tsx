@@ -14,7 +14,8 @@ export interface Session {
     user: User,
     token: string,
     updateToken: (token: string) => void,
-    ping: number
+    ping: number,
+    initialized: boolean
 }
 
 export const SessionContext = React.createContext<Session>({
@@ -26,7 +27,8 @@ export const SessionContext = React.createContext<Session>({
     },
     token: "",
     updateToken: (token: string) => { },
-    ping: -1
+    ping: -1,
+    initialized: false
 });
 
 export const SessionProvider = (props: { children: React.ReactNode }) => {
@@ -38,6 +40,7 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         registertime: 0
     });
     let [ping, setPing] = React.useState(-1);
+    let [initialized, setInitialized] = React.useState(false);
     function updateToken(token: string) {
         setToken(token);
         localStorage.setItem("token", token);
@@ -64,12 +67,13 @@ export const SessionProvider = (props: { children: React.ReactNode }) => {
         if (storagetoken) {
             updateToken(storagetoken);
         }
+        setInitialized(true);
         test().then(val => {
             setPing(val);
         });
     }, []);
     return (
-        <SessionContext.Provider value={{ user, token, updateToken, ping }}>
+        <SessionContext.Provider value={{ user, token, updateToken, ping, initialized }}>
             {props.children}
         </SessionContext.Provider>
     )

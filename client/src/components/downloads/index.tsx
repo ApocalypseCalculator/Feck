@@ -15,6 +15,8 @@ export const Downloads = () => {
     let [deletingfile, setDeletingfile] = React.useState<any>({});
 
     React.useEffect(() => {
+        if (!session.initialized) return;
+        
         axios.default.get('/api/downloads', {
             headers: {
                 "authorization": session.token
@@ -26,7 +28,7 @@ export const Downloads = () => {
                 setLoadtext("Loaded");
             }
         });
-    }, [session.user.loggedin]);
+    }, [session.initialized]);
 
     function updateSearch(event: any) {
         setSearch(event.target.value);
