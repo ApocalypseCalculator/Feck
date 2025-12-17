@@ -34,8 +34,7 @@ export = {
             res.setHeader('Content-Disposition', contentDisposition(filepath, { type: req.query.inline ? 'inline' : 'attachment' }));
             return res.sendFile(path.resolve(filepath));
         }
-        catch (err) {
-            console.error(err);
+        catch {
             return next();
         }
     }

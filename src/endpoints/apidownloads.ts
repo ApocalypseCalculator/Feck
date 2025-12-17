@@ -61,9 +61,7 @@ export = {
                                     type: "public",
                                 },
                                 {
-                                    AND: {
-                                        userid: req.user ? req.user.id : "-1",
-                                    }
+                                    userid: req.user ? req.user.id : "",
                                 }
                             ]
                         },

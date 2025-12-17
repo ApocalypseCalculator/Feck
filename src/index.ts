@@ -20,9 +20,9 @@ app.use('/site/files', express.static('static'));
 app.use(async (req, res, next) => {
     if (req.headers.authorization) {
         try {
-            let jwtuser = jwt.verify(req.headers.authorization, 'token');
+            let jwtuser = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
             let user = await prisma.user.findUnique({
-                where: { id: (jwtuser as any).id }
+                where: { id: (jwtuser as any).userid }
             })
             req.user = user || undefined;
         }
