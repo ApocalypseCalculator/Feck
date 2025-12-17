@@ -1,15 +1,14 @@
-*.db
-*.db-journal
+**/*.db
+**/*.db-journal
 prisma/generated
 
-uploads
+**/uploads
 
 deploy
 
 logs
-*.log
-node_modules/
-.npm
+**/*.log
+**/node_modules/
 .env
 .env.test
-dist
+**/dist

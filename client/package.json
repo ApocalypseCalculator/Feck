@@ -1,5 +1,9 @@
 {
     "name": "feck-files-client",
+    "scripts": {
+        "build": "npx vite build",
+        "dev": "npx vite"
+    },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^21.0.1",
         "@types/react": "^17.0.39",

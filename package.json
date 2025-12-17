@@ -4,8 +4,9 @@
   "description": "Simple, robust online drive solution",
   "main": "index.js",
   "scripts": {
-    "start": "cd client && vite build && cd .. && node .",
-    "dev": "cd client && vite & cd .. && node . && fg"
+    "start": "npx ts-node src/index.ts",
+    "dbsetup": "npx prisma generate",
+    "dev": "cd client && npx run dev & cd .. && node . && fg"
   },
   "repository": {
     "type": "git",
