@@ -16,7 +16,7 @@ export const Downloads = () => {
 
     React.useEffect(() => {
         if (!session.initialized) return;
-        
+
         axios.default.get('/api/downloads', {
             headers: {
                 "authorization": session.token
@@ -41,11 +41,12 @@ export const Downloads = () => {
     }
 
     function deleteFile(fileid: string) {
-        axios.default.post('/api/delete', {
-            fileid: fileid
-        }, {
+        axios.default.delete('/api/delete', {
             headers: {
                 "authorization": session.token
+            },
+            data: {
+                fileid: fileid
             }
         }).then((res) => {
             setFiles(files.filter(f => f.id !== fileid));
@@ -96,7 +97,7 @@ export const Downloads = () => {
                                 <td>{loadtext}</td>
                             </tr>
                             :
-                            <GenerateTable files={files} search={search} pubview={pubview} opendelete={openDeleteModal}/>
+                            <GenerateTable files={files} search={search} pubview={pubview} opendelete={openDeleteModal} />
                     }
                 </table>
             </div>
